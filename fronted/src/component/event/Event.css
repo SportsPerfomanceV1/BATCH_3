@@ -1,0 +1,185 @@
+/* .event {
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .event h2 {
+    color: #282c34;
+  }
+   */
+   .event-card {
+    border: 1px solid #ddd;
+    padding: 16px;
+    margin: 16px;
+    border-radius: 8px;
+  }
+  
+  .event-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .applied-events table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .applied-events th, .applied-events td {
+    padding: 12px;
+    border: 2px solid #c2c0c0;
+  }
+  
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .tabs button {
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    border: none;
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .tabs button.active {
+    background-color: #0056b3;
+  }
+  .event-card {
+    width: 250px; /* Set a fixed width for the card */
+    height: 350px; /* Set a fixed height */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+  }
+  
+  .event-card:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Container for the image */
+  .event-image-container {
+    height: 150px; /* Fixed height for the image container */
+    overflow: hidden;
+  }
+  
+  /* Image styling to fit the container */
+  .event-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure the image covers the entire area */
+  }
+  
+  /* Styling the details of the event */
+  .event-details {
+    padding: 12px;
+  }
+  
+  .event-details h3 {
+    margin: 8px 0;
+    font-size: 18px;
+  }
+  
+  .event-details p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  /* Ensure all cards are aligned well in a grid */
+  .event-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  
+  .button-19 {
+    appearance: button;
+    background-color: #1899D6;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: din-round,sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    line-height: 20px;
+    margin: 0;
+    outline: none;
+    overflow: visible;
+    padding: 13px 16px;
+    text-align: center;
+    text-transform: uppercase;
+    touch-action: manipulation;
+    transform: translateZ(0);
+    transition: filter .2s;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: 100%;
+  }
+  
+  .button-19:after {
+    background-clip: padding-box;
+    background-color: #1CB0F6;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    bottom: -4px;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+  }
+  
+  .button-19,
+  .button-19:focus {
+    user-select: auto;
+  }
+  
+  .button-19:hover:not(:disabled) {
+    filter: brightness(1.1);
+    -webkit-filter: brightness(1.1);
+  }
+  
+  .button-19:disabled {
+    cursor: auto;
+  }
+  
+  .button-19:active {
+    border-width: 4px 0 0;
+    background: none;
+  }
+  .button-registered {
+    background-color: #A9A9A9; /* Gray background for registered state */
+    color: #FFFFFF; /* White text */
+    cursor: not-allowed; /* Not allowed cursor for disabled state */
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    padding: 13px 16px;
+    text-align: center;
+    text-transform: uppercase;
+    width: 100%;
+    font-family: din-round, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .8px;
+  }
+  
