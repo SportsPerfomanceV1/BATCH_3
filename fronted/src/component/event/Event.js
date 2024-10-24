@@ -1,9 +1,17 @@
-import React from 'react'
+import React from 'react';
+import './Event.css'; 
 
-function Event() {
+const Event = () => {
   return (
-    <div>Event</div>
-  )
-}
+    <div className="event">
+      <h2>Available Events</h2>
+      <ul>
+        <li>Marathon</li>
+        <li>Triathlon</li>
+        <li>Swimming Competition</li>
+      </ul>
+    </div>
+  );
+};
 
-export default Event
+export default Event;
