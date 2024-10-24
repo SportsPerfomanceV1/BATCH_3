@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import { Link } from 'react-router-dom'; 
 import './Register.css';
 
 const Register = () => {
@@ -28,7 +28,7 @@ const Register = () => {
   return (
     <div className="register-container">
       <form className="register-form" onSubmit={handleSubmit}>
-        <h2>Register</h2>
+        <h2>SIGN UP</h2>
 
         <label htmlFor="name">Name</label>
         <input 
@@ -81,7 +81,6 @@ const Register = () => {
 
         <button type="submit" className="submit-btn">Register</button>
 
-        {/* Add link to login page */}
         <p className="login-redirect">
           Already have an account? <Link to="/Login">Login</Link>
         </p>
