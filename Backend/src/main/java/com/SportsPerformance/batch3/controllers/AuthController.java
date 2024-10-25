@@ -1,5 +1,8 @@
 package com.SportsPerformance.batch3.controllers;
-import com.SportsPerformance.batch3.dtos.AuthRequestDto;
+import com.SportsPerformance.batch3.dtos.LoginDto;
+import com.SportsPerformance.batch3.dtos.RegisterDto;
+import com.SportsPerformance.batch3.entities.User;
+import com.SportsPerformance.batch3.services.AuthService;
 import com.SportsPerformance.batch3.services.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,16 +12,24 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class AuthController {
 
+    private final AuthService authService;
     private final JwtService jwtService;
 
-    public AuthController(JwtService jwtService) {
+    public AuthController(AuthService authService, JwtService jwtService) {
+        this.authService = authService;
         this.jwtService = jwtService;
     }
 
-    @PostMapping("/get")
-    public String authenticate(@RequestBody UserDetails userDetails){
+    @PostMapping("/register")
+    public ResponseEntity<User> registerUser(@RequestBody RegisterDto registerDto){
+        User user = authService.registerUser(registerDto);
+        return ResponseEntity.ok(user);
+    }
 
-        return jwtService.generateToken(userDetails);
-
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody LoginDto loginDto){
+        User user = authService.loginUser(loginDto);
+        String token = jwtService.generateToken(user);
+        return ResponseEntity.ok(token);
     }
 }

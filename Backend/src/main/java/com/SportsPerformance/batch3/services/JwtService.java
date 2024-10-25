@@ -1,6 +1,5 @@
 package com.SportsPerformance.batch3.services;
 
-import com.SportsPerformance.batch3.dtos.AuthRequestDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
