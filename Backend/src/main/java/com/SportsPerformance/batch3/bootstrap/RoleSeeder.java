@@ -3,13 +3,13 @@ import com.SportsPerformance.batch3.entities.Role;
 import com.SportsPerformance.batch3.entities.Roles;
 import com.SportsPerformance.batch3.repositories.RoleRepository;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Optional;
 
-@Configuration
+@Component
 public class RoleSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
     private final RoleRepository roleRepository;
