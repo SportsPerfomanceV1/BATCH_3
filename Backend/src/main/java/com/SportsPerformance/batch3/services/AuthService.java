@@ -53,4 +53,19 @@ public class AuthService {
         );
         return userRepository.findByEmail(loginDto.getEmail()).orElseThrow();
     }
+
+    public User registerCoach(RegisterDto registerDto) {
+        Optional<Role> optionalRole = roleRepository.findByName(Roles.COACH);
+        if (optionalRole.isEmpty()){
+            return null;
+        }
+
+        User user = new User();
+        user.setEmail(registerDto.getEmail());
+        user.setFullName(registerDto.getFullName());
+        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        user.setRole(optionalRole.get());
+
+        return userRepository.save(user);
+    }
 }

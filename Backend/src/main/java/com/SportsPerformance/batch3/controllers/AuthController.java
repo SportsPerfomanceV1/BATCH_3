@@ -34,4 +34,10 @@ public class AuthController {
         return ResponseEntity.ok(token);
     }
 
+    @PostMapping("/registerCoach")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<User> registerCoach(@RequestBody RegisterDto registerDto){
+        User user = authService.registerCoach(registerDto);
+        return ResponseEntity.ok(user);
+    }
 }
