@@ -10,9 +10,6 @@ import Result from './component/result/Result';
 import Navbar from './component/navbar/Navbar'; 
 import Login from './component/login/Login';
 import Register from './component/register/Register';
-import TabNavigation from './component/event/TabNavigation';
-
-import { eventsData } from './component/event/data/eventsData'
 
 function App() {
   return (
@@ -28,8 +25,16 @@ function App() {
               <Route path="/coaches" element={<Coaches />} />
               <Route path="/athelete" element={<Athelete />} />
               <Route path="/result" element={<Result />} />
-              <Route path="/login" element={<Login />} /> {/* Route for Login */}
-              <Route path="/register" element={<Register />} /> {/* Route for Sign Up */}
+              <Route path="/login" element={<Login />} /> 
+              <Route path="/register" element={<Register />} />
+              <Route path="/admin/login" component={AdminLogin} />
+                <Route path="/admin/signup" component={AdminSignup} />
+                <Route path="/admin/dashboard" component={AdminDashboard} />
+                <Route path="/admin/dashboard" component={AdminDashboard} />
+                <Route path="/admin/create-event" component={CreateEvent} />
+                <Route path="/admin/AdminNavbar" component={AdminNavbar} />
+                <Route path="/admin/upload-results" component={UploadResults} />
+                <Route path="/admin/create-meet" component={CreateMeet} />
             </Routes>
           </div>
         </div>
