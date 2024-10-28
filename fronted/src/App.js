@@ -27,14 +27,6 @@ function App() {
               <Route path="/result" element={<Result />} />
               <Route path="/login" element={<Login />} /> 
               <Route path="/register" element={<Register />} />
-              <Route path="/admin/login" component={AdminLogin} />
-                <Route path="/admin/signup" component={AdminSignup} />
-                <Route path="/admin/dashboard" component={AdminDashboard} />
-                <Route path="/admin/dashboard" component={AdminDashboard} />
-                <Route path="/admin/create-event" component={CreateEvent} />
-                <Route path="/admin/AdminNavbar" component={AdminNavbar} />
-                <Route path="/admin/upload-results" component={UploadResults} />
-                <Route path="/admin/create-meet" component={CreateMeet} />
             </Routes>
           </div>
         </div>
