@@ -4,20 +4,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Dashboard from './component/dashboard/Dashboard';
 import News from './component/news/News';
-import Event from './component/event/Event';
 import Coaches from './component/coaches/Coaches';
 import Athelete from './component/athelete/Athelete';
 import Result from './component/result/Result';
 import Navbar from './component/navbar/Navbar'; 
 import Login from './component/login/Login';
 import Register from './component/register/Register';
-import AdminDashboard from './component/admin/AdminDashboard';
-import AdminLogin from './component/admin/AdminLogin';
-import AdminNavbar from './component/admin/AdminNavbar';
-import AdminSignup from './component/admin/AdminSignup';
-import CreateEvent from './component/admin/CreateEvent';
-import CreateMeet from './component/admin/CreateMeet';
-import UploadResults from './component/admin/UploadResults';
+
 function App() {
   return (
     <Router>
@@ -28,7 +21,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/news" element={<News />} />
-              <Route path="/event" element={<Event />} />
+              <Route path="/event" element={<TabNavigation events={eventsData} />} />
               <Route path="/coaches" element={<Coaches />} />
               <Route path="/athelete" element={<Athelete />} />
               <Route path="/result" element={<Result />} />
