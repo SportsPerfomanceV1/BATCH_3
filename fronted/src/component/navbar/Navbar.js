@@ -22,7 +22,7 @@ const Navbar = () => {
             </div>
             <ul className="nav-links">
                 <li><Link to="/home">Home</Link></li>
-                <li><Link to="/news">News</Link></li>
+                <li><Link to="/news">About Us</Link></li>
                 {isAdmin ? (
                     <li><Link to="/admin/adminlogin" className="button">Admin Login</Link></li>
                 ) : (
