@@ -2,11 +2,11 @@ package com.SportsPerformance.batch3.controllers;
 import com.SportsPerformance.batch3.dtos.LoginDto;
 import com.SportsPerformance.batch3.dtos.RegisterDto;
 import com.SportsPerformance.batch3.entities.User;
+import com.SportsPerformance.batch3.responses.LoginResponse;
 import com.SportsPerformance.batch3.services.AuthService;
 import com.SportsPerformance.batch3.services.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/auth")
@@ -28,10 +28,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody LoginDto loginDto){
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginDto loginDto){
         User user = authService.loginUser(loginDto);
         String token = jwtService.generateToken(user);
-        return ResponseEntity.ok(token);
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setToken(token);
+        loginResponse.setRole(user.getRole().getName());
+        return ResponseEntity.ok(loginResponse);
     }
 
     @PostMapping("/registerCoach")
