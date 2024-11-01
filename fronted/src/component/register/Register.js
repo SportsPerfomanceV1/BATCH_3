@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; 
+import { Link, useNavigate } from 'react-router-dom'; 
 import './Register.css';
 
 const Register = () => {
@@ -11,6 +11,8 @@ const Register = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(''); 
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,9 +22,30 @@ const Register = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form Data:', formData);
+    
+    try {
+      const response = await fetch('http://localhost:8080/auth/register', { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Registration failed. Please check your details.');
+      }
+
+      const result = await response.json();
+      console.log('Registration successful:', result);
+      
+      navigate('/login'); 
+
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
   };
 
   return (
@@ -30,7 +53,9 @@ const Register = () => {
       <form className="register-form" onSubmit={handleSubmit}>
         <h2>SIGN UP</h2>
 
-        <label htmlFor="name">Name</label>
+        {errorMessage && <div className="error-message">{errorMessage}</div>} 
+        
+        <label htmlFor="name">Full Name</label>
         <input 
           type="text" 
           id="name" 
@@ -68,21 +93,10 @@ const Register = () => {
           </button>
         </div>
 
-        <label htmlFor="dob">Date of Birth</label>
-        <input 
-          type="date" 
-          id="dob" 
-          name="dob" 
-          value={formData.dob} 
-          onChange={handleChange} 
-          required 
-          className="form-input"
-        />
-
         <button type="submit" className="submit-btn">Register</button>
 
         <p className="login-redirect">
-          Already have an account? <Link to="/Login">Login</Link>
+          Already have an account? <Link to="/login">Login</Link>
         </p>
       </form>
     </div>

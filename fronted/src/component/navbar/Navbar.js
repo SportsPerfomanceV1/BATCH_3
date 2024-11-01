@@ -1,26 +1,39 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar = () => {
-  return (
-    <nav className="navbar">
-      <h1>Athletics</h1>
-      <ul>
-        <li><Link to="/">Dashboard</Link></li>
-        <li><Link to="/news">News</Link></li>
-        <li><Link to="/event">Events</Link></li>
-        <li><Link to="/coaches">Coaches</Link></li>
-        <li><Link to="/athelete">Athelete</Link></li>
-        <li><Link to="/result">Result</Link></li>
-       
-       
-        <li><Link to="/Register" className="link register button">Sign Up</Link></li>
-        <li><Link to="/Logout" className="link logout button">Logout</Link></li>
-      </ul>
-    </nav>
-  );
-}
+    const [isAdmin, setIsAdmin] = useState(false);
+    const navigate = useNavigate();
+
+    const handleUserSelection = (event) => {
+        const selectedOption = event.target.value;
+        setIsAdmin(selectedOption === 'admin');
+    };
+
+    return (
+        <nav className="navbar">
+            <div className="navbar-left">
+                <h1 className="navbar-title">Atheletic</h1>
+                <select className="user-admin-select" onChange={handleUserSelection}>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <ul className="nav-links">
+                <li><Link to="/home">Home</Link></li>
+                <li><Link to="/news">News</Link></li>
+                {isAdmin ? (
+                    <li><Link to="/admin/adminlogin" className="button">Admin Login</Link></li>
+                ) : (
+                    <>
+                        <li><Link to="/login" className="button">Login</Link></li>
+                        <li><Link to="/register" className="button">Signup</Link></li>
+                    </>
+                )}
+            </ul>
+        </nav>
+    );
+};
 
 export default Navbar;
-
