@@ -60,7 +60,7 @@ const Home = () => {
       <h2 className="features-heading">Explore Features</h2> {/* Added heading here */}
 
       <div className="cards-container">
-        <div className="card" onClick={() => handleCardClick('/events')}>
+        <div className="card" onClick={() => handleCardClick('/event')}>
           <img src="https://starjournalnow.com/wp-content/uploads/2018/07/EVENTS-GRAPHIC_web.jpg" alt="Events" />
           <h3>Events</h3>
           <p>Explore upcoming events.</p>

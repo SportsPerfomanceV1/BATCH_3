@@ -3,15 +3,23 @@ import EventList from './EventList';
 import AppliedEvents from './AppliedEvents';
 
 const TabNavigation = ({ events }) => {
+  const [eventData, setEventData] = useState(events); // Use local state for events
   const [activeTab, setActiveTab] = useState('available');
 
-  // Applied events are filtered based on their status
-  const appliedEvents = events.filter((event) => event.status !== 'available');
+  const handleRegister = (eventId) => {
+    setEventData((prevEvents) =>
+      prevEvents.map((event) =>
+        event.id === eventId ? { ...event, isRegistered: true } : event
+      )
+    );
+  };
+
+  const availableEvents = eventData.filter((event) => !event.isRegistered);
+  const appliedEvents = eventData.filter((event) => event.isRegistered);
 
   return (
     <div className="tab-navigation">
-        <br/>
-
+      <br />
       <div className="tabs">
         <button
           onClick={() => setActiveTab('available')}
@@ -28,7 +36,7 @@ const TabNavigation = ({ events }) => {
       </div>
 
       {activeTab === 'available' ? (
-        <EventList events={events} />
+        <EventList events={availableEvents} onRegister={handleRegister} /> // Pass handleRegister as onRegister
       ) : (
         <AppliedEvents appliedEvents={appliedEvents} />
       )}
