@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import EventResult from '../EventResult/EventResult';
-import SearchBar from '../SearchBar/SearchBar';
-import apiService from '../../../services/apiService';
+import EventResult from './EventResult';
+import SearchBar from './SearchBar';
+import apiService from '../../services/apiService';
 import './AdminPanel.css';
 
 function AdminPanel() {
