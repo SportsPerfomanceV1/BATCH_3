@@ -1,8 +1,11 @@
 import React from 'react'
-
+import AdminPanel from './AdminPanel/AdminPanel'
 function Result() {
   return (
-    <div>Result</div>
+    <div>
+      <h1>Event Results</h1>
+      <AdminPanel />
+    </div>
   )
 }
 
