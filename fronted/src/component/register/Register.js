@@ -92,7 +92,7 @@ const Register = () => {
           className="form-input"
         >
           <option value="" disabled>Select your role</option>
-          <option value="Coach">Coach</option>
+          <option value="Coach">Coache</option>
           <option value="Athlete">Athlete</option>
         </select>
 
