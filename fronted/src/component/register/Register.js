@@ -7,7 +7,7 @@ const Register = () => {
     name: '',
     email: '',
     password: '',
-    dob: ''
+    role: '' 
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -92,6 +92,21 @@ const Register = () => {
             {showPassword ? 'Hide' : 'Show'}
           </button>
         </div>
+
+       
+        <label htmlFor="role">Role</label>
+        <select 
+          id="role" 
+          name="role" 
+          value={formData.role} 
+          onChange={handleChange} 
+          required 
+          className="form-input"
+        >
+          <option value="" disabled>Select your role</option>
+          <option value="Coach">Coach</option>
+          <option value="Athlete">Athlete</option>
+        </select>
 
         <button type="submit" className="submit-btn">Register</button>
 

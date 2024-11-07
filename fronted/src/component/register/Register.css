@@ -96,7 +96,7 @@
   
   .register-form:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(255, 255, 255, 0.1); /* White shadow on hover */
+    box-shadow: 0 12px 30px rgba(255, 255, 255, 0.1); 
   }
 
   .login-redirect {
@@ -117,4 +117,41 @@
   .login-redirect a:hover {
     color: #000000;
   }
-  
+ 
+.form-input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #333;
+}
+
+#role {
+  background-color: #f9f9f9;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  appearance: none; 
+  background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjY2NjIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMiAxMiI+PHBhdGggZD0iTTEgNEw2IDlsNS01eiIvPjwvc3ZnPg==');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+}
+
+#role:hover, #role:focus {
+  border-color: #888;
+  outline: none;
+}
+
+#role option {
+  color: #333;
+  background-color: #fff;
+  padding: 10px;
+}
