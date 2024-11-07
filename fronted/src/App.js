@@ -11,6 +11,8 @@ import Login from './component/login/Login';
 import Register from './component/register/Register';
 import TabNavigation from './component/event/TabNavigation';
 import { eventsData } from './component/event/data/eventsData'; 
+import AddProfileForm from './component/athelete/AddProfileForm';
+
 function App() {
   return (
     <Router>
@@ -25,6 +27,9 @@ function App() {
               <Route path="/event" element={<TabNavigation events={eventsData} />} /> {/* Use TabNavigation */}
               <Route path="/coaches" element={<Coaches />} />
               <Route path="/athelete" element={<Athelete />} />
+              <Route path="/add-profile" element={<AddProfileForm onAddProfile={() => {}} />} />
+
+
               <Route path="/result" element={<Result />} />
               <Route path="/login" element={<Login />} /> 
               <Route path="/register" element={<Register />} />
