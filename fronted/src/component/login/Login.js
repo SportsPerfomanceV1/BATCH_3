@@ -2,49 +2,39 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import './Login.css'; 
 
+import axios from 'axios';
+
 const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  
-  const navigate = useNavigate(); 
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = {
-      email,
-      password,
-    };
+    const data = { email, password };
 
     try {
-      const response = await fetch('http://localhost:8080/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Login failed. Please check your credentials.');
-      }
-
-      const result = await response.json();
-      console.log('Login successful:', result);
-
-      navigate('/home'); 
-
+      const response = await axios.post('http://localhost:8080/auth/login', data);
+      console.log('Login successful', response.data);
+      navigate('/home');
     } catch (error) {
-      setErrorMessage(error.message);
+      if (error.response) {
+     
+        setErrorMessage(error.response.data || 'Login failed');
+      } else if (error.request) {
+     
+        setErrorMessage('No response from server');
+      } else {
+  
+        setErrorMessage(error.message);
+      }
     }
   };
 
+  
   return (
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
@@ -65,7 +55,6 @@ const Login = () => {
         <label htmlFor="password">Password</label>
         <div className="password-container">
           <input 
-            type={showPassword ? "text" : "password"} 
             id="password" 
             name="password" 
             placeholder="Enter your password" 
@@ -74,9 +63,6 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)} 
           />
-          <button type="button" className="toggle-btn" onClick={togglePasswordVisibility}>
-            {showPassword ? 'Hide' : 'Show'}
-          </button>
         </div>
 
         <button type="submit" className="submit-btn">Login</button>
