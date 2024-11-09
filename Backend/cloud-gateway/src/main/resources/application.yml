@@ -10,10 +10,15 @@ spring:
           uri: lb://USER-SERVICE
           predicates:
             - Path=/auth/**
+          filters:
+            - JwtAuthFilter
+
         - id: athlete-service
           uri: lb://ATHLETE-SERVICE
           predicates:
             - Path=/athletes/**
+          filters:
+            - JwtAuthFilter
 
 eureka:
   client:
