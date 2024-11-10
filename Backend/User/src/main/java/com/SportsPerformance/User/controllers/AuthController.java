@@ -2,10 +2,10 @@ package com.SportsPerformance.User.controllers;
 import com.SportsPerformance.User.dtos.LoginDto;
 import com.SportsPerformance.User.dtos.RegisterDto;
 import com.SportsPerformance.User.entities.User;
+import com.SportsPerformance.User.responses.LoginResponse;
 import com.SportsPerformance.User.services.AuthService;
 import com.SportsPerformance.User.services.JwtService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/auth")
@@ -27,14 +27,16 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody LoginDto loginDto){
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginDto loginDto){
         User user = authService.loginUser(loginDto);
         String token = jwtService.generateToken(user);
-        return ResponseEntity.ok(token);
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setToken(token);
+        loginResponse.setRole(user.getRole().getName());
+        return ResponseEntity.ok(loginResponse);
     }
 
-    @PostMapping("/registerCoach")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PostMapping("/registerCoach/admin")
     public ResponseEntity<User> registerCoach(@RequestBody RegisterDto registerDto){
         User user = authService.registerCoach(registerDto);
         return ResponseEntity.ok(user);

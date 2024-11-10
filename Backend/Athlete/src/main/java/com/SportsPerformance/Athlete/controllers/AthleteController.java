@@ -1,6 +1,5 @@
 package com.SportsPerformance.Athlete.controllers;
 
-
 import com.SportsPerformance.Athlete.dtos.AssistanceRequestDto;
 import com.SportsPerformance.Athlete.entities.AssistanceRequest;
 import com.SportsPerformance.Athlete.entities.Athlete;
@@ -30,7 +29,7 @@ public class AthleteController {
         return ResponseEntity.ok(athlete);
     }
 
-    @GetMapping("/getByName")
+    @GetMapping("/getByName/coach")
     public ResponseEntity<Athlete> getAthlete(@RequestBody String name) {
         Athlete athlete = athleteService.getAthlete(name);
         return ResponseEntity.ok(athlete);
@@ -42,7 +41,7 @@ public class AthleteController {
         return ResponseEntity.ok(athlete);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/getAll/admin")
     public ResponseEntity<List<Athlete>> getAll() {
         List<Athlete> athletes = athleteService.getAll();
         return ResponseEntity.ok(athletes);
