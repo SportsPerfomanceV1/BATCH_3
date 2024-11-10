@@ -1,5 +1,6 @@
 package com.SportsPerformance.User.services;
 
+import com.SportsPerformance.User.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -32,6 +33,14 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    public Integer extractUserId(String token){
+        return extractAllClaims(token).get("userId", Integer.class);
+    }
+
+    public String extractRole(String token){
+        return extractAllClaims(token).get("role", String.class);
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> ClaimsResolver) {
         final Claims claims = extractAllClaims(token);
         return ClaimsResolver.apply(claims);
@@ -56,6 +65,9 @@ public class JwtService {
 
     public String generateToken(UserDetails userDetails){
         Map<String, Object> claims = new HashMap<>();
+        User user = (User) userDetails;
+        claims.put("role",user.getRole().getName());
+        claims.put("userId",user.getUserId());
         return generateToken(claims, userDetails);
     }
 
