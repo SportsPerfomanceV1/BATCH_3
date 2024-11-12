@@ -23,7 +23,7 @@ const Home = () => {
   }, []);
 
   const handleCardClick = (route) => {
-    const isLoggedIn = true; // Replace with actual login check
+    const isLoggedIn = true; 
     if (isLoggedIn) {
       navigate(route);
     } else {
@@ -60,6 +60,11 @@ const Home = () => {
       <h2 className="features-heading">Explore Features</h2> {/* Added heading here */}
 
       <div className="cards-container">
+      <div className="card" onClick={() => handleCardClick('/admindashboard')}>
+          <img src="https://t4.ftcdn.net/jpg/02/27/45/09/360_F_227450952_KQCMShHPOPebUXklULsKsROk5AvN6H1H.jpg" alt="Feedback" />
+          <h3>Admin</h3>
+          <p>Manage Events, Meet, Results.</p>
+        </div>
         <div className="card" onClick={() => handleCardClick('/event')}>
           <img src="https://starjournalnow.com/wp-content/uploads/2018/07/EVENTS-GRAPHIC_web.jpg" alt="Events" />
           <h3>Events</h3>
@@ -85,11 +90,7 @@ const Home = () => {
           <h3>Results</h3>
           <p>Check the latest results.</p>
         </div>
-        <div className="card" onClick={() => handleCardClick('/feedback')}>
-          <img src="https://impulso06.com/wp-content/uploads/2023/02/Que-es-la-cultura-de-feedback-y-como-construirla.png" alt="Feedback" />
-          <h3>Feedback</h3>
-          <p>Give us your feedback.</p>
-        </div>
+        
       </div>
     </div>
   );
