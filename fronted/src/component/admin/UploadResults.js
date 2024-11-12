@@ -9,15 +9,15 @@ const UploadResults = () => {
 
     return (
         <div>
-            <h2>Upload Results</h2>
+            <h2>Name of Shortlisted Candidates</h2>
             <form onSubmit={handleUploadResults}>
                 <textarea 
-                    placeholder="Results" 
+                    placeholder="Names" 
                     value={results} 
                     onChange={(e) => setResults(e.target.value)} 
                     required 
                 />
-                <button type="submit">Upload Results</button>
+                <button type="submit">Upload</button>
             </form>
         </div>
     );
