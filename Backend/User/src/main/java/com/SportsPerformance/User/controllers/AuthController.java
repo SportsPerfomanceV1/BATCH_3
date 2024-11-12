@@ -4,7 +4,6 @@ import com.SportsPerformance.User.dtos.RegisterDto;
 import com.SportsPerformance.User.entities.User;
 import com.SportsPerformance.User.responses.LoginResponse;
 import com.SportsPerformance.User.services.AuthService;
-import com.SportsPerformance.User.services.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,11 +12,15 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
-    private final JwtService jwtService;
 
-    public AuthController(AuthService authService, JwtService jwtService) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
-        this.jwtService = jwtService;
+    }
+
+    @GetMapping("/getUserIdFromToken")
+    public ResponseEntity<Integer> getUserIdFromToken(@RequestParam String token){
+        int userId = authService.getUserIdFromToken(token);
+        return ResponseEntity.ok(userId);
     }
 
     @PostMapping("/register")
@@ -28,11 +31,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginDto loginDto){
-        User user = authService.loginUser(loginDto);
-        String token = jwtService.generateToken(user);
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setToken(token);
-        loginResponse.setRole(user.getRole().getName());
+        LoginResponse loginResponse = authService.loginUser(loginDto);
+
         return ResponseEntity.ok(loginResponse);
     }
 

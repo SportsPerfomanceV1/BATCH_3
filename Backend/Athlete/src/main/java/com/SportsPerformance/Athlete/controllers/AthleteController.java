@@ -4,6 +4,7 @@ import com.SportsPerformance.Athlete.dtos.AssistanceRequestDto;
 import com.SportsPerformance.Athlete.entities.AssistanceRequest;
 import com.SportsPerformance.Athlete.entities.Athlete;
 import com.SportsPerformance.Athlete.services.AthleteService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +24,10 @@ public class AthleteController {
 
     @PostMapping("/create")
     public ResponseEntity<Athlete> createProfile(
+            HttpServletRequest request,
             @RequestParam String athleteData,
             @RequestParam("file") MultipartFile file) throws IOException {
-        Athlete athlete = athleteService.createProfile(athleteData, file);
+        Athlete athlete = athleteService.createProfile(request, athleteData, file);
         return ResponseEntity.ok(athlete);
     }
 
@@ -35,7 +37,7 @@ public class AthleteController {
         return ResponseEntity.ok(athlete);
     }
 
-    @GetMapping("/getById/{athleteId}")
+    @GetMapping("/getById/{athleteId}/coach")
     public ResponseEntity<Athlete> getAthleteById(@PathVariable int athleteId) {
         Athlete athlete = athleteService.getAthleteById(athleteId);
         return ResponseEntity.ok(athlete);
@@ -47,37 +49,39 @@ public class AthleteController {
         return ResponseEntity.ok(athletes);
     }
 
-    @PutMapping("/edit/{userId}")
+    @PutMapping("/edit")
     public ResponseEntity<Athlete> editAthlete(
-            @PathVariable int userId,
+            HttpServletRequest request,
             @RequestParam String athleteData,
             @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-        Athlete athlete = athleteService.editAthlete(userId, athleteData, file);
+        Athlete athlete = athleteService.editAthlete(request, athleteData, file);
         return ResponseEntity.ok(athlete);
     }
 
-    @GetMapping("/getByUserId/{userId}")
+    @GetMapping("/getByUserId/{userId}/coach")
     public ResponseEntity<Athlete> findAthleteByUserId(@PathVariable int userId){
         Athlete athlete = athleteService.findAthleteByUserId(userId);
         return  ResponseEntity.ok(athlete);
     }
 
-    @GetMapping("/getIdByUserId/{userId}")
+    @GetMapping("/getIdByUserId/{userId}/coach")
     public ResponseEntity<Integer> findAthleteIdByUserId(@PathVariable int userId){
         int athleteId = athleteService.findAthleteIdByUserId(userId);
         return ResponseEntity.ok(athleteId);
     }
 
+    /*
     @GetMapping("/validate")
     public ResponseEntity<Boolean> validateAthlete(@RequestBody String email){
         Boolean isValid = athleteService.validateAthlete(email);
         return ResponseEntity.ok(isValid);
-    }
+    }*/
 
     @PostMapping("/requestAssistance")
-    public ResponseEntity<?> requestAssistance(@RequestBody AssistanceRequestDto assistanceRequestDto){
+    public ResponseEntity<?> requestAssistance(HttpServletRequest httpServletRequest,
+                                               @RequestBody AssistanceRequestDto assistanceRequestDto){
         try {
-            AssistanceRequest request = athleteService.requestAssistance(assistanceRequestDto);
+            AssistanceRequest request = athleteService.requestAssistance(httpServletRequest, assistanceRequestDto);
             return ResponseEntity.ok(request);
         }
         catch (IllegalStateException e){

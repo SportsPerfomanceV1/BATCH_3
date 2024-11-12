@@ -7,6 +7,7 @@ import com.SportsPerformance.User.entities.Roles;
 import com.SportsPerformance.User.entities.User;
 import com.SportsPerformance.User.repositories.RoleRepository;
 import com.SportsPerformance.User.repositories.UserRepository;
+import com.SportsPerformance.User.responses.LoginResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,12 +22,18 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
+    private final JwtService jwtService;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, RoleRepository roleRepository) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, RoleRepository roleRepository, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.roleRepository = roleRepository;
+        this.jwtService = jwtService;
+    }
+
+    public int getUserIdFromToken(String token) {
+        return jwtService.extractUserId(token);
     }
 
     public User registerUser(RegisterDto registerDto){
@@ -44,14 +51,21 @@ public class AuthService {
         return userRepository.save(user);
     }
 
-    public User loginUser(LoginDto loginDto){
+    public LoginResponse loginUser(LoginDto loginDto){
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDto.getEmail(),
                         loginDto.getPassword()
                 )
         );
-        return userRepository.findByEmail(loginDto.getEmail()).orElseThrow();
+        User user =userRepository.findByEmail(loginDto.getEmail()).orElseThrow();
+
+        LoginResponse loginResponse = new LoginResponse();
+        String token = jwtService.generateToken(user);
+        loginResponse.setToken(token);
+        loginResponse.setRole(user.getRole().getName());
+
+        return loginResponse;
     }
 
     public User registerCoach(RegisterDto registerDto) {

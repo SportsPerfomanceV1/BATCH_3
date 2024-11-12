@@ -7,8 +7,10 @@ import com.SportsPerformance.Athlete.entities.Athlete;
 import com.SportsPerformance.Athlete.repositories.AssistanceRequestRepository;
 import com.SportsPerformance.Athlete.repositories.AthleteRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,20 +23,41 @@ public class AthleteService {
     private final AthleteRepository athleteRepository;
     private final ObjectMapper mapper;
     private final AssistanceRequestRepository assistanceRequestRepository;
+    private final WebClient.Builder builder;
 
-    String FOLDER_PATH = "C:/Users/LENOVO/OneDrive/Desktop/Athlete/src/main/java/com/SportsPerformance/Athlete/Img/";
-
-    public AthleteService(AthleteRepository athleteRepository, ObjectMapper mapper, AssistanceRequestRepository assistanceRequestRepository) {
+    String FOLDER_PATH = "C:/Users/LENOVO/OneDrive/Desktop/BATCH_3/Backend/Athlete/src/main/java/com/SportsPerformance/Athlete/Img/";
+    String url = "http://USER-SERVICE/auth/getUserIdFromToken?token=";
+    public AthleteService(AthleteRepository athleteRepository, ObjectMapper mapper, AssistanceRequestRepository assistanceRequestRepository, WebClient.Builder builder) {
         this.athleteRepository = athleteRepository;
         this.mapper = mapper;
         this.assistanceRequestRepository = assistanceRequestRepository;
+        this.builder = builder;
     }
 
-    public Athlete createProfile(String athleteData, MultipartFile file) throws IOException {
+
+
+    public Athlete createProfile(HttpServletRequest request, String athleteData, MultipartFile file) throws IOException {
+        String token = request.getHeader("Authorization").substring(7);
+        int userId = builder.build().get().uri(url + token)
+                .retrieve().bodyToMono(Integer.class).block();
+
+        if (athleteRepository.existsByUserId(userId)){
+            throw new RuntimeException("user already exists");
+        }
+
         String filePath = saveFile(file);
         AthleteRequestDto athleteRequestDto = mapper.readValue(athleteData, AthleteRequestDto.class);
 
-        Athlete athlete = getAthlete(athleteRequestDto, filePath);
+        Athlete athlete = new Athlete();
+        athlete.setUserId(userId);
+        athlete.setFirstName(athleteRequestDto.getFirstName());
+        athlete.setLastName(athleteRequestDto.getLastName());
+        athlete.setBirthDate(LocalDate.parse(athleteRequestDto.getBirthDate()));
+        athlete.setGender(athleteRequestDto.getGender());
+        athlete.setHeight(athleteRequestDto.getHeight());
+        athlete.setWeight(athleteRequestDto.getWeight());
+        athlete.setCategory(athleteRequestDto.getCategory());
+        athlete.setPhotoUrl(filePath);
         return athleteRepository.save(athlete);
     }
 
@@ -78,7 +101,11 @@ public class AthleteService {
         return athlete.getAthleteId();
     }
 
-    public Athlete editAthlete(int userId, String athleteData, MultipartFile file) throws IOException {
+    public Athlete editAthlete(HttpServletRequest request, String athleteData, MultipartFile file) throws IOException {
+
+        String token = request.getHeader("Authorization").substring(7);
+        int userId = builder.build().get().uri(url + token)
+                .retrieve().bodyToMono(Integer.class).block();
 
         AthleteRequestDto athleteRequestDto = mapper.readValue(athleteData, AthleteRequestDto.class);
         Athlete athlete = athleteRepository.findByUserId(userId);
@@ -103,23 +130,29 @@ public class AthleteService {
         return filePath;
     }
 
+    /*
     public Boolean validateAthlete(String email) {
         return athleteRepository.existsByFirstName(email);
-    }
+    }*/
 
-    public AssistanceRequest requestAssistance(AssistanceRequestDto assistanceRequestDto) {
+    public AssistanceRequest requestAssistance(HttpServletRequest httpServletRequest,AssistanceRequestDto assistanceRequestDto) {
 
-        boolean existSent = assistanceRequestRepository.existsByAthleteIdAndStatus(assistanceRequestDto.getAthleteId(), "sent");
-        boolean existApprove = assistanceRequestRepository.existsByAthleteIdAndStatus(assistanceRequestDto.getAthleteId(), "approved");
+        String token = httpServletRequest.getHeader("Authorization").substring(7);
+        int userId = builder.build().get().uri(url + token)
+                .retrieve().bodyToMono(Integer.class).block();
+        int athleteId = findAthleteIdByUserId(userId);
+
+
+        boolean existSent = assistanceRequestRepository.existsByAthleteIdAndStatus(athleteId, "sent");
+        boolean existApprove = assistanceRequestRepository.existsByAthleteIdAndStatus(athleteId, "approved");
 
         if(existSent || existApprove) {
             throw new IllegalStateException("The request has already been approved or is currently pending approval");
         }
         else {
             AssistanceRequest request = new AssistanceRequest();
-            request.setAthleteId(assistanceRequestDto.getAthleteId());
+            request.setAthleteId(athleteId);
             request.setCoachId(assistanceRequestDto.getCoachId());
-            request.setRemarks(assistanceRequestDto.getRemarks());
             request.setStatus("sent");
             return assistanceRequestRepository.save(request);
         }

@@ -8,7 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AssistanceRequestDto {
-    private int athleteId;
     private int coachId;
-    private String remarks;
 }
