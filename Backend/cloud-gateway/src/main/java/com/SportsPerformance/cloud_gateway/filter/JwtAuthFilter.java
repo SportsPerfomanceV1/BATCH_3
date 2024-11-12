@@ -6,6 +6,8 @@ import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFac
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Config> {
 
@@ -35,6 +37,13 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                     jwtUtil.validateToken(authHeader);
                 }catch (Exception e){
                     throw new RuntimeException("unauthorized access");
+                }
+                String role = jwtUtil.extractRole(authHeader);
+                if (exchange.getRequest().getURI().getPath().endsWith("/admin") && !role.equals("ADMIN")){
+                    throw new RuntimeException("access denied");
+                }
+                if (exchange.getRequest().getURI().getPath().endsWith("/coach") && role.equals("ATHLETE")){
+                    throw new RuntimeException("access denied");
                 }
             }
             return chain.filter(exchange);
