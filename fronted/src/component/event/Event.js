@@ -1,15 +1,32 @@
 import React from 'react';
-import './Event.css'; 
+import './Event.css';
 
-const Event = () => {
+const Event = ({ event, onRegister }) => {
   return (
-    <div className="event">
-      <h2>Available Events</h2>
-      <ul>
-        <li>Marathon</li>
-        <li>Triathlon</li>
-        <li>Swimming Competition</li>
-      </ul>
+    <div className="event-card">
+      <div className="event-image-container">
+        <img src={event.image} alt={event.name} className="event-image" />
+      </div>
+      <div className="event-details">
+        <h3>{event.name}</h3>
+        <p>Date: {event.date}</p>
+        <p>Meet: {event.meet}</p>
+        <p>Category: {event.category}</p>
+      </div>
+      <div>
+        {event.isRegistered ? (
+          <button className="button-registered" disabled>
+            Registered
+          </button>
+        ) : (
+          <button
+            className="button-19"
+            onClick={() => onRegister(event.id)} // Make sure onRegister is called here
+          >
+            Register
+          </button>
+        )}
+      </div>
     </div>
   );
 };

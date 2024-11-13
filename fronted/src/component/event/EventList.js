@@ -1,11 +1,11 @@
 import React from 'react';
-import EventCard from './EventCard';
+import Event from './Event';
 
-const EventList = ({ events }) => {
+const EventList = ({ events, onRegister }) => {
   return (
     <div className="event-list">
       {events.map((event) => (
-        <EventCard key={event.id} event={event} />
+        <Event key={event.id} event={event} onRegister={onRegister} /> // Pass onRegister to each Event
       ))}
     </div>
   );

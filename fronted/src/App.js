@@ -9,9 +9,13 @@ import Result from './component/result/Result';
 import Navbar from './component/navbar/Navbar'; 
 import Login from './component/login/Login';
 import Register from './component/register/Register';
-import Event from './component/event/Event';
-
-
+import TabNavigation from './component/event/TabNavigation';
+import { eventsData } from './component/event/data/eventsData'; 
+import AddProfileForm from './component/athelete/AddProfileForm';
+import AdminDashboard from './component/admin/AdminDashboard';
+import CreateMeet from './component/admin/CreateMeet';
+import CreateEvent from './component/admin/CreateEvent';
+import UploadResults from './component/admin/UploadResults';
 function App() {
   return (
     <Router>
@@ -20,17 +24,23 @@ function App() {
         <div className="App-header"> 
           <div className="App-content">
             <Routes>
+              <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
-
               <Route path="/news" element={<News />} />
-              <Route path="/event" element={<Event/>} />
+              <Route path="/event" element={<TabNavigation events={eventsData} />} /> {/* Use TabNavigation */}
               <Route path="/coaches" element={<Coaches />} />
               <Route path="/athelete" element={<Athelete />} />
+              <Route path="/add-profile" element={<AddProfileForm onAddProfile={() => {}} />} />
+               <Route path="/admindashboard" element={<AdminDashboard/>}/>
+<Route path="/createmeet" element={<CreateMeet/>}/>
+<Route path="/createevent" element={<CreateEvent/>}/>
+<Route path="/uploadresults" element={<UploadResults/>}/>
               <Route path="/result" element={<Result />} />
               <Route path="/login" element={<Login />} /> 
               <Route path="/register" element={<Register />} />
             </Routes>
           </div>
+          
         </div>
       </div>
     </Router>
@@ -38,4 +48,3 @@ function App() {
 }
 
 export default App;
-
