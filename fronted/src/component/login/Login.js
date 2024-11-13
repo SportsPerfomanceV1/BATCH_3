@@ -1,47 +1,47 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import './Login.css'; 
+import axios from 'axios';
 
 const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
   
-  const navigate = useNavigate(); 
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(''); 
+  const [message, setMessage] = useState(''); 
+  
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const data = {
-      email,
-      password,
-    };
-
     try {
-      const response = await fetch('http://localhost:8080/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+      setError('');
+      setMessage('');
 
-      if (!response.ok) {
-        throw new Error('Login failed. Please check your credentials.');
-      }
+      const response = await axios.post('http://localhost:8080/auth/login', formData);
 
-      const result = await response.json();
-      console.log('Login successful:', result);
-
+      setMessage("Login successful"); 
       navigate('/home'); 
-
     } catch (error) {
-      setErrorMessage(error.message);
+      if (error.response && error.response.data) {
+        setError(error.response.data.error || 'Login failed. Please try again.');
+      } else {
+        setError('Login failed. Please try again.');
+      }
     }
   };
 
@@ -49,7 +49,8 @@ const Login = () => {
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
         <h2 className="login-title">Login</h2>
-        {errorMessage && <div className="error-message">{errorMessage}</div>}
+        {error && <div className="error-message">{error}</div>}
+        {message && <div className="success-message">{message}</div>}
         
         <label htmlFor="email">Email</label>
         <input 
@@ -59,9 +60,10 @@ const Login = () => {
           placeholder="Enter your email" 
           required 
           className="form-input"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)} 
+          value={formData.email}
+          onChange={handleChange} 
         />
+        
         <label htmlFor="password">Password</label>
         <div className="password-container">
           <input 
@@ -71,8 +73,8 @@ const Login = () => {
             placeholder="Enter your password" 
             required 
             className="form-input"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)} 
+            value={formData.password}
+            onChange={handleChange} 
           />
           <button type="button" className="toggle-btn" onClick={togglePasswordVisibility}>
             {showPassword ? 'Hide' : 'Show'}

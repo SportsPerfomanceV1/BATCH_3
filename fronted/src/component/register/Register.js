@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; 
 import './Register.css';
+import axios from 'axios';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -26,25 +27,17 @@ const Register = () => {
     e.preventDefault();
     
     try {
-      const response = await fetch('http://localhost:8080/auth/register', { 
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Registration failed. Please check your details.');
-      }
-
-      const result = await response.json();
-      console.log('Registration successful:', result);
+      const response = await axios.post('http://localhost:8080/auth/register', formData);
+      console.log('Registration successful:', response.data);
       
       navigate('/login'); 
 
     } catch (error) {
-      setErrorMessage(error.message);
+      if (error.response && error.response.data) {
+        setErrorMessage(error.response.data.error || 'Registration failed. Please check your details.');
+      } else {
+        setErrorMessage('Registration failed. Please check your details.');
+      }
     }
   };
 
@@ -93,7 +86,6 @@ const Register = () => {
           </button>
         </div>
 
-       
         <label htmlFor="role">Role</label>
         <select 
           id="role" 
@@ -104,7 +96,7 @@ const Register = () => {
           className="form-input"
         >
           <option value="" disabled>Select your role</option>
-          <option value="Coach">Coache</option>
+          <option value="Coach">Coach</option>
           <option value="Athlete">Athlete</option>
         </select>
 
