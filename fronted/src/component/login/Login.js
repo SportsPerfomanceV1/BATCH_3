@@ -41,10 +41,12 @@ const Login = () => {
         setError(error.response.data.error || 'Login failed. Please try again.');
       } else {
         setError('Login failed. Please try again.');
+
       }
     }
   };
 
+  
   return (
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
@@ -67,7 +69,6 @@ const Login = () => {
         <label htmlFor="password">Password</label>
         <div className="password-container">
           <input 
-            type={showPassword ? "text" : "password"} 
             id="password" 
             name="password" 
             placeholder="Enter your password" 
@@ -76,9 +77,6 @@ const Login = () => {
             value={formData.password}
             onChange={handleChange} 
           />
-          <button type="button" className="toggle-btn" onClick={togglePasswordVisibility}>
-            {showPassword ? 'Hide' : 'Show'}
-          </button>
         </div>
 
         <button type="submit" className="submit-btn">Login</button>
