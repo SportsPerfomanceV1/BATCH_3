@@ -20,6 +20,14 @@ spring:
           filters:
             - JwtAuthFilter
 
+        - id: event-service
+          uri: lb://EVENT-SERVICE
+          predicates:
+            - Path=/event/**
+          filters:
+            - JwtAuthFilter
+
+
 eureka:
   client:
     register-with-eureka: true
