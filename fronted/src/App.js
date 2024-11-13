@@ -11,7 +11,7 @@ import Login from './component/login/Login';
 import Register from './component/register/Register';
 import TabNavigation from './component/event/TabNavigation';
 import { eventsData } from './component/event/data/eventsData'; 
-import AddProfileForm from './component/athelete/AddProfileForm';
+import AddProfileForm from './component/coaches/AddProfileForm';
 import AdminDashboard from './component/admin/AdminDashboard';
 import CreateMeet from './component/admin/CreateMeet';
 import CreateEvent from './component/admin/CreateEvent';
