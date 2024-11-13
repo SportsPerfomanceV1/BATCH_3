@@ -1,0 +1,180 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+.athlete-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    width: 100%;
+    padding: -10px;
+    
+    overflow-x: auto; /* Ensure horizontal overflow if needed */
+}
+
+
+.profile-card {
+    display: flex;
+    align-items: center;
+    padding-bottom: 50px;
+   
+}
+
+.profile-image {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.profile-info h2 {
+    font-size: 1.5em;
+    color: #222;
+    margin-bottom: 8px;
+}
+
+.profile-info p {
+    font-size: 0.9em;
+    color: #555;
+    margin: 3px 0;
+}
+
+
+.tabs {
+    margin-top: 20px;
+}
+
+.tab-links {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.tab-links button {
+    padding: 10px 20px;
+    font-size: 0.95em;
+    border: none;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tab-links button.active {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+}
+
+.tab-links button:hover {
+    background-color: #e0e0e0;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+    margin-top: 10px;
+}
+
+.filter-buttons button {
+    padding: 8px 15px;
+    font-size: 0.9em;
+    border: none;
+    border-radius: 5px;
+    background-color: #e0e0e0;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.filter-buttons button.active {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+}
+
+.filter-buttons button:hover {
+    background-color: #c6c6c6;
+}
+
+
+.tab-content {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+.tab-table {
+    width: 80%; 
+    margin: 0 auto; 
+    border-collapse: collapse;
+    font-size: 0.9em;
+    margin-top: 15px;
+}
+
+.tab-table th,
+.tab-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.tab-table th {
+    background-color: #007bff;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.tab-table tbody tr:hover {
+    background-color: #f1f5fb;
+}
+
+
+@media (max-width: 768px) {
+    .athlete-container {
+        padding: 10px;
+    }
+
+    .athlete-profile {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .tab-links {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filter-buttons {
+        margin-left: 0;
+        margin-top: 15px;
+        justify-content: flex-start;
+    }
+
+    .filter-buttons button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .tab-links button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
