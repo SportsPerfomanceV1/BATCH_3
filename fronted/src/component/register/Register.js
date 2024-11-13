@@ -3,43 +3,44 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Register.css';
 import axios from 'axios';
 
-
 const Register = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    role: '',
+    role: '' 
   });
-  const [errorMessage, setErrorMessage] = useState('');
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(''); 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     try {
       const response = await axios.post('http://localhost:8080/auth/register', formData);
+      console.log('Registration successful:', response.data);
+      
+      navigate('/login'); 
 
-      console.log('Registration successful', response.data);
-      navigate('/login');
     } catch (error) {
-      if (error.response) {
-   
-        setErrorMessage(error.response.data || 'Registration failed');
-      } else if (error.request) {
-     
-        setErrorMessage('No response from server');
+      if (error.response && error.response.data) {
+        setErrorMessage(error.response.data.error || 'Registration failed. Please check your details.');
       } else {
-        setErrorMessage(error.message);
+        setErrorMessage('Registration failed. Please check your details.');
       }
     }
   };
-  
+
   return (
     <div className="register-container">
       <form className="register-form" onSubmit={handleSubmit}>
@@ -72,6 +73,7 @@ const Register = () => {
         <label htmlFor="password">Password</label>
         <div className="password-container">
           <input 
+            type={showPassword ? "text" : "password"} 
             id="password" 
             name="password" 
             value={formData.password} 
@@ -79,9 +81,11 @@ const Register = () => {
             required 
             className="form-input"
           />
+          <button type="button" className="toggle-btn" onClick={togglePasswordVisibility}>
+            {showPassword ? 'Hide' : 'Show'}
+          </button>
         </div>
 
-       
         <label htmlFor="role">Role</label>
         <select 
           id="role" 
@@ -92,7 +96,7 @@ const Register = () => {
           className="form-input"
         >
           <option value="" disabled>Select your role</option>
-          <option value="Coach">Coache</option>
+          <option value="Coach">Coach</option>
           <option value="Athlete">Athlete</option>
         </select>
 
