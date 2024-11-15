@@ -15,7 +15,7 @@ import AddProfileForm from './component/coaches/AddProfileForm';
 import AdminDashboard from './component/admin/AdminDashboard';
 import CreateMeet from './component/admin/CreateMeet';
 import CreateEvent from './component/admin/CreateEvent';
-import UploadResults from './component/admin/UploadResults';
+import RegisterCoach from './component/admin/RegisterCoach';
 function App() {
   return (
     <Router>
@@ -34,7 +34,7 @@ function App() {
                <Route path="/admindashboard" element={<AdminDashboard/>}/>
 <Route path="/createmeet" element={<CreateMeet/>}/>
 <Route path="/createevent" element={<CreateEvent/>}/>
-<Route path="/uploadresults" element={<UploadResults/>}/>
+<Route path="/registercoach" element={<RegisterCoach/>}/>
               <Route path="/result" element={<Result />} />
               <Route path="/login" element={<Login />} /> 
               <Route path="/register" element={<Register />} />
