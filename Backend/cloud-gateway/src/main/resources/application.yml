@@ -23,7 +23,7 @@ spring:
         - id: event-service
           uri: lb://EVENT-SERVICE
           predicates:
-            - Path=/event/**
+            - Path=/event/**, /meet/**
           filters:
             - JwtAuthFilter
 
