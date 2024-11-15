@@ -45,12 +45,12 @@ const Coaches = () => {
   };
 
   return (
-    <div className="profile-container">
+    <div className="profile-container1">
       <h1>Manage Athlete/Coach Profiles</h1>
       <button onClick={() => navigate('/add-profile')} className="add-profile-button">
         Add Your Profile
       </button>
-      <div className="profile-cards">
+      <div className="profile-cards1">
         {profiles.map((profile, index) => (
           <ProfileCard key={index} profile={profile} />
         ))}

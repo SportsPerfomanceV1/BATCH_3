@@ -1,16 +1,16 @@
-profile-container {
+profile-container1 {
     padding: 20px;
     background-color: #f4f4f4;
     min-height: 100vh;
   }
   
-  .profile-container h1 {
+  .profile-container1 h1 {
     text-align: center;
     color: #333;
     margin-bottom: 20px;
   }
   
-  .profile-cards {
+  .profile-cards1 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

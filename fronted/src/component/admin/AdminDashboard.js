@@ -3,7 +3,6 @@ import { Link, Route, Routes } from 'react-router-dom';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
-    
     return (
         <div className="admin-dashboard">
             <header className="navbar1">
@@ -31,8 +30,8 @@ const AdminDashboard = () => {
                     <Link to="/createmeet">
                         <button className="action-button">Create Meet</button>
                     </Link>
-                    <Link to="/uploadresults">
-                        <button className="action-button">Shortlist Candidates</button>
+                    <Link to="/registercoach">
+                        <button className="action-button">Register Coach</button>
                     </Link>
                     <Link to="/result">
                         <button className="action-button">Publish Results</button>
@@ -76,7 +75,7 @@ const AdminDashboard = () => {
                 <Route path="/logout" element={<h2>Logging out...</h2>} />
                 <Route path="/create-event" element={<h2>Create Event Page</h2>} />
                 <Route path="/create-meet" element={<h2>Create Meet Page</h2>} />
-                <Route path="/shortlist-candidates" element={<h2>Shortlist Candidates Page</h2>} />
+                <Route path="/register-coach" element={<h2>Register Coach Page</h2>} />
                 <Route path="/publish-results" element={<h2>Publish Results Page</h2>} />
             </Routes>
         </div>
