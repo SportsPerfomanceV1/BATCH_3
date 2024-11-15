@@ -43,19 +43,31 @@ const Home = () => {
               transition: 'opacity 1s ease-in-out',
             }}
           >
-            <img src={image.src} alt={image.alt} style={{ width: '100%', height: '400px' }} />
+            <img src={image.src} alt={image.alt} style={{ width: '100%', height: '550px' }} />
           </div>
         ))}
       </div>
 
       <div className="about-section">
+    <div className="about-header">
         <h2>About Us</h2>
-        <p>
-          We are dedicated to promoting athletic excellence through comprehensive training programs,
-          coaching, and support for athletes of all levels. Our mission is to inspire and empower
-          athletes to achieve their highest potential.
-        </p>
-      </div>
+        <div className="header-line"></div>
+    </div>
+    <p className="about-text">
+        We are dedicated to promoting athletic excellence through a blend of tradition and innovation. 
+        Our mission is to inspire and empower athletes to achieve their highest potential by providing 
+        cutting-edge training programs, expert coaching, and unwavering support.
+    </p>
+    <p className="about-text">
+        Beyond physical performance, we emphasize the importance of mental wellness, fostering a holistic approach 
+        to athlete development. At our core, we believe in building an inclusive community where individuals from 
+        all backgrounds can thrive, connect, and grow.
+    </p>
+    <p className="about-text">
+        Together, we aim to push boundaries, redefine possibilities, and shape the future of athletics for generations to come.
+    </p>
+</div>
+
 
       <h2 className="features-heading">Explore Features</h2> {/* Added heading here */}
 
