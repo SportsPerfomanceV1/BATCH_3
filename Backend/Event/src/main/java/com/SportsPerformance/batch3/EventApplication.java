@@ -6,10 +6,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class Batch3Application {
+public class EventApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Batch3Application.class, args);
+		SpringApplication.run(EventApplication.class, args);
 	}
 
 }

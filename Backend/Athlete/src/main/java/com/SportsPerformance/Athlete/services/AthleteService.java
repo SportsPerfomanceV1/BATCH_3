@@ -61,19 +61,6 @@ public class AthleteService {
         return athleteRepository.save(athlete);
     }
 
-    private static Athlete getAthlete(AthleteRequestDto athleteRequestDto, String filePath) {
-        Athlete athlete = new Athlete();
-        athlete.setFirstName(athleteRequestDto.getFirstName());
-        athlete.setLastName(athleteRequestDto.getLastName());
-        athlete.setBirthDate(LocalDate.parse(athleteRequestDto.getBirthDate()));
-        athlete.setGender(athleteRequestDto.getGender());
-        athlete.setHeight(athleteRequestDto.getHeight());
-        athlete.setWeight(athleteRequestDto.getWeight());
-        athlete.setCategory(athleteRequestDto.getCategory());
-        athlete.setPhotoUrl(filePath);
-        return athlete;
-    }
-
     public Athlete getAthlete(String name) {
         String[] names = name.split(" ", 2);
         if (names.length != 2){
@@ -108,7 +95,7 @@ public class AthleteService {
                 .retrieve().bodyToMono(Integer.class).block();
 
         AthleteRequestDto athleteRequestDto = mapper.readValue(athleteData, AthleteRequestDto.class);
-        Athlete athlete = athleteRepository.findByUserId(userId);
+        Athlete athlete = findAthleteByUserId(userId);
         athlete.setFirstName(athleteRequestDto.getFirstName());
         athlete.setLastName(athleteRequestDto.getLastName());
         athlete.setBirthDate(LocalDate.parse(athleteRequestDto.getBirthDate()));
@@ -141,17 +128,18 @@ public class AthleteService {
         int userId = builder.build().get().uri(url + token)
                 .retrieve().bodyToMono(Integer.class).block();
         int athleteId = findAthleteIdByUserId(userId);
+        Athlete athlete = findAthleteByUserId(userId);
 
 
-        boolean existSent = assistanceRequestRepository.existsByAthleteIdAndStatus(athleteId, "sent");
-        boolean existApprove = assistanceRequestRepository.existsByAthleteIdAndStatus(athleteId, "approved");
+        boolean existSent = assistanceRequestRepository.existsByAthlete_AthleteIdAndStatus(athleteId, "sent");
+        boolean existApprove = assistanceRequestRepository.existsByAthlete_AthleteIdAndStatus(athleteId, "approved");
 
         if(existSent || existApprove) {
             throw new IllegalStateException("The request has already been approved or is currently pending approval");
         }
         else {
             AssistanceRequest request = new AssistanceRequest();
-            request.setAthleteId(athleteId);
+            request.setAthlete(athlete);
             request.setCoachId(assistanceRequestDto.getCoachId());
             request.setStatus("sent");
             return assistanceRequestRepository.save(request);
