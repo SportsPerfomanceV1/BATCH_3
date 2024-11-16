@@ -29,7 +29,7 @@ public class ResultController {
         return ResponseEntity.ok(results);
     }
 
-    @GetMapping("/getResultById/{resultId}/coach")
+    @GetMapping("/getById/{resultId}/coach")
     public ResponseEntity<Result> getResultById(@PathVariable int resultId){
         Result result = resultService.getResultById(resultId);
         return ResponseEntity.ok(result);

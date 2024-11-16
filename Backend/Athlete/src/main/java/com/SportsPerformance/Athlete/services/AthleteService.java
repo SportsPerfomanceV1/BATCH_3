@@ -131,7 +131,7 @@ public class AthleteService {
         Athlete athlete = findAthleteByUserId(userId);
 
 
-        boolean existSent = assistanceRequestRepository.existsByAthlete_AthleteIdAndStatus(athleteId, "sent");
+        boolean existSent = assistanceRequestRepository.existsByAthlete_AthleteIdAndStatus(athleteId, "pending");
         boolean existApprove = assistanceRequestRepository.existsByAthlete_AthleteIdAndStatus(athleteId, "approved");
 
         if(existSent || existApprove) {
@@ -141,7 +141,7 @@ public class AthleteService {
             AssistanceRequest request = new AssistanceRequest();
             request.setAthlete(athlete);
             request.setCoachId(assistanceRequestDto.getCoachId());
-            request.setStatus("sent");
+            request.setStatus("pending");
             return assistanceRequestRepository.save(request);
         }
 
