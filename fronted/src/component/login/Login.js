@@ -32,7 +32,15 @@ const Login = () => {
       setError('');
       setMessage('');
 
-      const response = await axios.post('http://localhost:8080/auth/login', formData);
+      const response = await axios.post('http://localhost:8080/auth/login', {
+    headers: {
+        'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'
+
+    },
+    formData
+}
+ 
+);
 
       setMessage("Login successful"); 
       navigate('/home'); 
