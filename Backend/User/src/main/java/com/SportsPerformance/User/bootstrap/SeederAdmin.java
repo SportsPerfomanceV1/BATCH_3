@@ -31,7 +31,6 @@ public class SeederAdmin implements ApplicationListener<ContextRefreshedEvent> {
 
     private void createAdmin() {
         RegisterDto registerDto = new RegisterDto();
-        registerDto.setFullName("Admin");
         registerDto.setPassword("pwd1");
         registerDto.setEmail("admin@gmail.com");
 
@@ -45,7 +44,6 @@ public class SeederAdmin implements ApplicationListener<ContextRefreshedEvent> {
         User user = new User();
         user.setEmail(registerDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-        user.setFullName(registerDto.getFullName());
         user.setRole(optionalRole.get());
 
         userRepository.save(user);

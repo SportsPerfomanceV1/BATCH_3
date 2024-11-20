@@ -46,7 +46,6 @@ public class AuthService {
         User user = new User();
         user.setEmail(registerDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-        user.setFullName(registerDto.getFullName());
         user.setRole(optionalRole.get());
         return userRepository.save(user);
     }
@@ -76,7 +75,6 @@ public class AuthService {
 
         User user = new User();
         user.setEmail(registerDto.getEmail());
-        user.setFullName(registerDto.getFullName());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         user.setRole(optionalRole.get());
 
