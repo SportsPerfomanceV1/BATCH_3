@@ -1,62 +1,172 @@
 import React, { useState } from 'react';
-import ProfileCard from './ProfileCard';
-import { useNavigate } from 'react-router-dom';
-import './Profile.css';
+import './Athlete.css';
 
-const Athelete = () => {
-  const [profiles, setProfiles] = useState([
-    {
-      name: 'John Doe',
-      age: 25,
-      bio: 'Professional athlete with 5 years of experience in athletics.',
-      image: 'https://media.istockphoto.com/id/1125038961/photo/young-man-running-outdoors-in-morning.jpg?s=1024x1024&w=is&k=20&c=n93U-5CVLB-0d4jnOcNXqcTo0Msd4O6iPqi0FJKVncU=',
-    },
-    {
-      name: 'Jane Smith',
-      age: 30,
-      bio: 'Experienced coach specializing in track and field.',
-      image: 'https://media.istockphoto.com/id/1176094106/photo/superb-male-athlete-showing-motivation-and-conditioning.jpg?s=1024x1024&w=is&k=20&c=Ra4AO2SlWU2IzRezMA1vrH-JkgBgLcu4wm7ug6IYet8=',
-    },
-    {
-      name: 'John Wohn',
-      age: 25,
-      bio: 'Professional athlete with 5 years of experience in athletics.',
-      image: 'https://images.unsplash.com/photo-1726013878575-7602eb03998b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YXRoZWxldGUlMjBtYW58ZW58MHx8MHx8fDA%3D',
-    },
-    {
-      name: 'Alice',
-      age: 20,
-      bio: 'Professional athlete with 5 years of experience in athletics.',
-      image: 'https://media.istockphoto.com/id/615883260/photo/difficult-doesnt-mean-impossible.webp?a=1&b=1&s=612x612&w=0&k=20&c=Wl9-JMMd5yE7iJs6867lF2XLGaycehFXn2TOckWR8LY=',
-    },
-    {
-      name: 'Peter',
-      age: 40,
-      bio: 'Professional athlete with 5 years of experience in athletics.',
-      image: 'https://media.istockphoto.com/id/500284633/photo/portrait-of-male-athlete-in-gym-gym.webp?a=1&b=1&s=612x612&w=0&k=20&c=epJjxXNSpCaTCHUBvDdQMlHD7pVY18eat7siSsQdP4I=',
-    },
-  ]);
+const Athlete = () => {
+    const [activeTab, setActiveTab] = useState('Overview');
 
-  const navigate = useNavigate();
+    const handleTabClick = (tab) => {
+        setActiveTab(tab);
+    };
 
-  const handleAddProfile = (newProfile) => {
-    setProfiles((prevProfiles) => [...prevProfiles, newProfile]); 
-    navigate('/athlete'); 
-  };
+    return (
+        <div className="athlete-container">
+            <div className="athlete-profile">
+                <div className="profile-card">
+                    <img 
+                        src="https://i.pinimg.com/originals/ff/10/7d/ff107dd98f5c0c69990a1ca57a850b9a.jpg" 
+                        alt="Profile" 
+                        className="profile-image" 
+                    />
+                    <div className="profile-info">
+                        <h2>Damon Salvatore</h2>
+                        <p>Date of Birth: 10/10/2000</p>
+                        <p>Gender: Male</p>
+                        <p>Height: 170 cm</p>
+                        <p>Weight: 60 kg</p>
+                        <p>Category: 100M</p>
+                        <p>Coach: N/A</p>
+                    </div>
+                    <button className="edit-button">✏️ Edit Profile</button>
+                </div>
 
-  return (
-    <div className="profile-container">
-      <h1>Manage Athlete/Coach Profiles</h1>
-      <button onClick={() => navigate('/add-profile')} className="add-profile-button">
-        Add Your Profile
-      </button>
-      <div className="profile-cards">
-        {profiles.map((profile, index) => (
-          <ProfileCard key={index} profile={profile} />
-        ))}
-      </div>
-    </div>
-  );
+                <div className="tabs">
+                    <div className="tab-links">
+                        <button 
+                            className={activeTab === 'Overview' ? 'active' : ''}
+                            onClick={() => handleTabClick('Overview')}
+                        >Overview</button>
+                        <button 
+                            className={activeTab === 'Applied Events' ? 'active' : ''}
+                            onClick={() => handleTabClick('Applied Events')}
+                        >Applied Events</button>
+                        <button 
+                            className={activeTab === 'Wellness' ? 'active' : ''}
+                            onClick={() => handleTabClick('Wellness')}
+                        >Wellness</button>
+                    </div>
+                    <div className="tab-content">
+                        {activeTab === 'Overview' && (
+                            <div className="tab-overview">Overview content here...</div>
+                        )}
+                        {activeTab === 'Applied Events' && (
+                            <div className="tab-applied-events">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Event ID</th>
+                                            <th>Event Name</th>
+                                            <th>Category</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>E_00007</td><td>DiscusForce Throw</td><td>Throw</td><td>Pending</td></tr>
+                                        <tr><td>E_00006</td><td>RelayChamp 4x100m</td><td>4x100m</td><td>Pending</td></tr>
+                                        <tr><td>E_00001</td><td>Rapid Dash</td><td>100M</td><td>Approved</td></tr>
+                                        <tr><td>E_00004</td><td>VaultKing Pole Vault</td><td>10M</td><td>Rejected</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                        {activeTab === 'Wellness' && (
+                            <div className="tab-wellness">Wellness content here...</div>
+                        )}
+                    
+                      
+                    <div className="filter-buttons">
+                        <button 
+                            className={activeTab === 'Pending' ? 'active' : ''}
+                            onClick={() => handleTabClick('Pending')}
+                        >Pending</button>
+                        <button 
+                            className={activeTab === 'Approved' ? 'active' : ''}
+                            onClick={() => handleTabClick('Approved')}
+                        >Approved</button>
+                        <button 
+                            className={activeTab === 'Rejected' ? 'active' : ''}
+                            onClick={() => handleTabClick('Rejected')}
+                        >Rejected</button>
+                    </div>
+</div>
+
+                    <div className="tab-content">
+                        {activeTab === 'Overview' && (
+                            <div className="tab-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>EVENT ID</th>
+                                            <th>EVENT NAME</th>
+                                            <th>CATEGORY</th>
+                                            <th>STATUS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>E_00007</td><td>DiscusForce Throw</td><td>Throw</td><td>Pending</td></tr>
+                                        <tr><td>E_00006</td><td>RelayChamp 4x100m</td><td>4x100m</td><td>Pending</td></tr>
+                                        <tr><td>E_00001</td><td>Rapid Dash</td><td>100M</td><td>Approved</td></tr>
+                                        <tr><td>E_00004</td><td>VaultKing Pole Vault</td><td>10M</td><td>Rejected</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                        {activeTab === 'Pending' && (
+                            <div className="tab-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>EVENT ID</th>
+                                            <th>EVENT NAME</th>
+                                            <th>CATEGORY</th>
+                                            <th>STATUS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>E_00007</td><td>DiscusForce Throw</td><td>Throw</td><td>Pending</td></tr>
+                                        <tr><td>E_00006</td><td>RelayChamp 4x100m</td><td>4x100m</td><td>Pending</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                        {activeTab === 'Approved' && (
+                            <div className="tab-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>EVENT ID</th>
+                                            <th>EVENT NAME</th>
+                                            <th>CATEGORY</th>
+                                            <th>STATUS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>E_00001</td><td>Rapid Dash</td><td>100M</td><td>Approved</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                        {activeTab === 'Rejected' && (
+                            <div className="tab-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>EVENT ID</th>
+                                            <th>EVENT NAME</th>
+                                            <th>CATEGORY</th>
+                                            <th>STATUS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>E_00004</td><td>VaultKing Pole Vault</td><td>10M</td><td>Rejected</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
-export default Athelete;
+export default Athlete;

@@ -23,7 +23,7 @@ const Home = () => {
   }, []);
 
   const handleCardClick = (route) => {
-    const isLoggedIn = true; // Replace with actual login check
+    const isLoggedIn = true; 
     if (isLoggedIn) {
       navigate(route);
     } else {
@@ -43,23 +43,40 @@ const Home = () => {
               transition: 'opacity 1s ease-in-out',
             }}
           >
-            <img src={image.src} alt={image.alt} style={{ width: '100%', height: '400px' }} />
+            <img src={image.src} alt={image.alt} style={{ width: '100%', height: '550px' }} />
           </div>
         ))}
       </div>
 
       <div className="about-section">
+    <div className="about-header">
         <h2>About Us</h2>
-        <p>
-          We are dedicated to promoting athletic excellence through comprehensive training programs,
-          coaching, and support for athletes of all levels. Our mission is to inspire and empower
-          athletes to achieve their highest potential.
-        </p>
-      </div>
+        <div className="header-line"></div>
+    </div>
+    <p className="about-text">
+        We are dedicated to promoting athletic excellence through a blend of tradition and innovation. 
+        Our mission is to inspire and empower athletes to achieve their highest potential by providing 
+        cutting-edge training programs, expert coaching, and unwavering support.
+    </p>
+    <p className="about-text">
+        Beyond physical performance, we emphasize the importance of mental wellness, fostering a holistic approach 
+        to athlete development. At our core, we believe in building an inclusive community where individuals from 
+        all backgrounds can thrive, connect, and grow.
+    </p>
+    <p className="about-text">
+        Together, we aim to push boundaries, redefine possibilities, and shape the future of athletics for generations to come.
+    </p>
+</div>
+
 
       <h2 className="features-heading">Explore Features</h2> {/* Added heading here */}
 
       <div className="cards-container">
+      <div className="card" onClick={() => handleCardClick('/admindashboard')}>
+          <img src="https://t4.ftcdn.net/jpg/02/27/45/09/360_F_227450952_KQCMShHPOPebUXklULsKsROk5AvN6H1H.jpg" alt="Feedback" />
+          <h3>Admin</h3>
+          <p>Manage Events, Meet, Results.</p>
+        </div>
         <div className="card" onClick={() => handleCardClick('/event')}>
           <img src="https://starjournalnow.com/wp-content/uploads/2018/07/EVENTS-GRAPHIC_web.jpg" alt="Events" />
           <h3>Events</h3>
@@ -85,11 +102,7 @@ const Home = () => {
           <h3>Results</h3>
           <p>Check the latest results.</p>
         </div>
-        <div className="card" onClick={() => handleCardClick('/feedback')}>
-          <img src="https://impulso06.com/wp-content/uploads/2023/02/Que-es-la-cultura-de-feedback-y-como-construirla.png" alt="Feedback" />
-          <h3>Feedback</h3>
-          <p>Give us your feedback.</p>
-        </div>
+        
       </div>
     </div>
   );

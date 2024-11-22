@@ -21,7 +21,7 @@ const Event = ({ event, onRegister }) => {
         ) : (
           <button
             className="button-19"
-            onClick={() => onRegister(event.id)} // Make sure onRegister is called here
+            onClick={() => onRegister(event.id)} 
           >
             Register
           </button>
