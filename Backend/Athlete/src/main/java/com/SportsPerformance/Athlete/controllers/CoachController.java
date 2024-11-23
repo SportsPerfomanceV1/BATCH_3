@@ -4,33 +4,34 @@ import com.SportsPerformance.Athlete.dtos.AnalysisResponseDto;
 import com.SportsPerformance.Athlete.dtos.CoachRequestDto;
 import com.SportsPerformance.Athlete.entities.Coach;
 import com.SportsPerformance.Athlete.services.CoachService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/coaches")
+@RequestMapping("/coaches")
 public class CoachController {
     @Autowired
     private CoachService coachService;
 
     @PostMapping("/create")
-    public ResponseEntity<Coach> createProfile(@ModelAttribute CoachRequestDto dto,
-                                               @RequestParam("photo") MultipartFile photo) {
-        String photoUrl = "/uploads/" + photo.getOriginalFilename(); // Example file location
-        Coach coach = coachService.createProfile(dto, photoUrl);
+    public ResponseEntity<Coach> createProfile(HttpServletRequest request,
+                                               @RequestParam String dto,
+                                               @RequestParam("file") MultipartFile photo) throws IOException {
+        Coach coach = coachService.createProfile(request, dto, photo);
         return ResponseEntity.ok(coach);
     }
 
-    @PutMapping("/update/{coachId}")
-    public ResponseEntity<Coach> updateProfile(@PathVariable int coachId,
-                                               @ModelAttribute CoachRequestDto dto,
-                                               @RequestParam("photo") MultipartFile photo) {
-        String photoUrl = "/uploads/" + photo.getOriginalFilename();
-        Coach coach = coachService.updateProfile(dto, coachId, photoUrl);
+    @PutMapping("/update")
+    public ResponseEntity<Coach> updateProfile(HttpServletRequest request,
+                                               @RequestParam String dto,
+                                               @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+        Coach coach = coachService.updateProfile(request,  dto, file);
         return ResponseEntity.ok(coach);
     }
 
@@ -57,4 +58,6 @@ public class CoachController {
         AnalysisResponseDto analysis = coachService.getAnalysis();
         return ResponseEntity.ok(analysis);
     }
+
+
 }

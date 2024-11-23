@@ -13,4 +13,6 @@ public interface CoachRepository extends JpaRepository<Coach, Integer> {
     List<Coach> findAll();
     List<Coach> findByFirstNameContainingOrLastNameContaining(String firstName, String lastName);
     Optional<Coach> findByUserId(int userId);
+
+    boolean existsByUserId(int userId);
 }

@@ -25,7 +25,7 @@ public class AthleteService {
     private final AssistanceRequestRepository assistanceRequestRepository;
     private final WebClient.Builder builder;
 
-    String FOLDER_PATH = "C:/Users/LENOVO/OneDrive/Desktop/BATCH_3/Backend/Athlete/src/main/java/com/SportsPerformance/Athlete/Img/";
+    String FOLDER_PATH = "C:/Users/LENOVO/OneDrive/Desktop/BATCH_3/Backend/Img/Athletes/";
     String url = "http://USER-SERVICE/auth/getUserIdFromToken?token=";
     public AthleteService(AthleteRepository athleteRepository, ObjectMapper mapper, AssistanceRequestRepository assistanceRequestRepository, WebClient.Builder builder) {
         this.athleteRepository = athleteRepository;

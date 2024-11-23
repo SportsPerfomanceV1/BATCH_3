@@ -16,7 +16,7 @@ spring:
         - id: athlete-service
           uri: lb://ATHLETE-SERVICE
           predicates:
-            - Path=/athletes/**
+            - Path=/athletes/**, /coaches/**, /diets/**
           filters:
             - JwtAuthFilter
 
