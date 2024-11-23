@@ -35,7 +35,7 @@ const Login = () => {
       const response = await axios.post('http://localhost:8080/auth/login',formData);
 
       setMessage("Login successful"); 
-      navigate('/home'); 
+      navigate('/dashboard'); 
     } catch (error) {
       if (error.response && error.response.data) {
         setError(error.response.data.error || 'Login failed. Please try again.');
