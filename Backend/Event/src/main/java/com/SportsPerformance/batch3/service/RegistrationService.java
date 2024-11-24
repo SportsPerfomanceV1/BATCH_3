@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class RegistrationService {
@@ -47,11 +48,16 @@ public class RegistrationService {
     }
 
     public List<Registration> getRegistrationsByEvent(int eventId) {
-        return registrationRepository.findAllByEvent_EventId(eventId);
+        List<Registration> registrations = registrationRepository.findAllByEvent_EventId(eventId);
+        if (registrations.isEmpty()){
+            throw new NoSuchElementException("No registrations found with event id: "+eventId);
+        }
+        return registrations;
     }
 
     public Registration getRegistration(int registrationId) {
-        return registrationRepository.findById(registrationId).orElse(null);
+        return registrationRepository.findById(registrationId)
+                .orElseThrow(() -> new NoSuchElementException("No registration found with id: "+registrationId));
     }
 
     public void approveRegistration(int registrationId) {

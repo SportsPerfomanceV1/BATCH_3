@@ -6,6 +6,7 @@ import com.SportsPerformance.batch3.repository.MeetRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class MeetService {
@@ -16,6 +17,9 @@ public class MeetService {
     }
 
     public Meet createMeet(MeetRequestDto meetRequestDto) {
+        if (meetRepository.existsByMeetName(meetRequestDto.getMeetName())){
+            throw new IllegalArgumentException("meet already exists");
+        }
         Meet meet = new Meet();
         meet.setMeetName(meetRequestDto.getMeetName());
         return meetRepository.save(meet);
@@ -26,7 +30,8 @@ public class MeetService {
     }
 
     public Meet getMeetById(int meetId) {
-        return meetRepository.findById(meetId).orElse(null);
+        return meetRepository.findById(meetId)
+                .orElseThrow(() -> new NoSuchElementException("Meet with id:"+ meetId +" not found"));
     }
 
     public Meet updateMeet(int meetId, MeetRequestDto meetRequestDto) {

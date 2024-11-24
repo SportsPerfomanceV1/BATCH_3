@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.nio.file.FileSystemException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/athletes")
@@ -23,12 +25,18 @@ public class AthleteController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Athlete> createProfile(
+    public ResponseEntity<?> createProfile(
             HttpServletRequest request,
             @RequestParam String athleteData,
             @RequestParam("file") MultipartFile file) throws IOException {
-        Athlete athlete = athleteService.createProfile(request, athleteData, file);
-        return ResponseEntity.ok(athlete);
+        try {
+            Athlete athlete = athleteService.createProfile(request, athleteData, file);
+            return ResponseEntity.ok(athlete);
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }catch (FileSystemException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     @GetMapping("/getByName/coach")
@@ -38,9 +46,13 @@ public class AthleteController {
     }
 
     @GetMapping("/getById/{athleteId}/coach")
-    public ResponseEntity<Athlete> getAthleteById(@PathVariable int athleteId) {
-        Athlete athlete = athleteService.getAthleteById(athleteId);
-        return ResponseEntity.ok(athlete);
+    public ResponseEntity<?> getAthleteById(@PathVariable int athleteId) {
+        try {
+            Athlete athlete = athleteService.getAthleteById(athleteId);
+            return ResponseEntity.ok(athlete);
+        }catch (NoSuchElementException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @GetMapping("/getAll/admin")
@@ -50,12 +62,18 @@ public class AthleteController {
     }
 
     @PutMapping("/edit")
-    public ResponseEntity<Athlete> editAthlete(
+    public ResponseEntity<?> editAthlete(
             HttpServletRequest request,
             @RequestParam String athleteData,
             @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-        Athlete athlete = athleteService.editAthlete(request, athleteData, file);
-        return ResponseEntity.ok(athlete);
+        try {
+            Athlete athlete = athleteService.editAthlete(request, athleteData, file);
+            return ResponseEntity.ok(athlete);
+        }catch (FileSystemException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }catch (NoSuchElementException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @GetMapping("/getByUserId/{userId}/coach")

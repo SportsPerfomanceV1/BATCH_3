@@ -7,6 +7,7 @@ import com.SportsPerformance.batch3.repository.ResultRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ResultService {
@@ -21,6 +22,9 @@ public class ResultService {
 
     public Result createResult(ResultRequestDto resultRequestDto) {
         Event event = eventService.getEventById(resultRequestDto.getEventId());
+        if (event == null){
+            throw new NoSuchElementException("No event found ");
+        }
 
         Result result = new Result();
         result.setEvent(event);
@@ -35,6 +39,7 @@ public class ResultService {
     }
 
     public Result getResultById(int resultId) {
-        return resultRepository.findById(resultId).orElse(null);
+        return resultRepository.findById(resultId)
+                .orElseThrow(() -> new NoSuchElementException("No result found with id:"+ resultId));
     }
 }

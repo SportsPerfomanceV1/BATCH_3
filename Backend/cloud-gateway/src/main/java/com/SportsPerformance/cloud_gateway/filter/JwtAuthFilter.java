@@ -1,12 +1,11 @@
 package com.SportsPerformance.cloud_gateway.filter;
+import com.SportsPerformance.cloud_gateway.exception.CustomExceptions;
 import com.SportsPerformance.cloud_gateway.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-
-import java.util.Objects;
 
 @Component
 public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Config> {
@@ -36,14 +35,14 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                 try{
                     jwtUtil.validateToken(authHeader);
                 }catch (Exception e){
-                    throw new RuntimeException("unauthorized access");
+                    throw new CustomExceptions.UnauthorizedAccessException("Unauthorized access: Invalid token");
                 }
                 String role = jwtUtil.extractRole(authHeader);
                 if (exchange.getRequest().getURI().getPath().endsWith("/admin") && !role.equals("ADMIN")){
-                    throw new RuntimeException("access denied");
+                    throw new CustomExceptions.UnauthorizedAccessException("Access to this is restricted");
                 }
                 if (exchange.getRequest().getURI().getPath().endsWith("/coach") && role.equals("ATHLETE")){
-                    throw new RuntimeException("access denied");
+                    throw new CustomExceptions.UnauthorizedAccessException("Access to this is restricted");
                 }
             }
             return chain.filter(exchange);
