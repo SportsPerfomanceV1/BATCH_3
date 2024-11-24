@@ -38,6 +38,9 @@ public class AuthService {
 
     public User registerUser(RegisterDto registerDto){
 
+        if (userRepository.findByEmail(registerDto.getEmail()).isPresent()){
+            throw new IllegalArgumentException("Email already exists");
+        }
         Optional<Role> optionalRole = roleRepository.findByName(Roles.ATHLETE);
         if (optionalRole.isEmpty()){
             return null;
@@ -68,6 +71,10 @@ public class AuthService {
     }
 
     public User registerCoach(RegisterDto registerDto) {
+        if (userRepository.findByEmail(registerDto.getEmail()).isPresent()){
+            throw new IllegalArgumentException("Email already exists");
+        }
+
         Optional<Role> optionalRole = roleRepository.findByName(Roles.COACH);
         if (optionalRole.isEmpty()){
             return null;

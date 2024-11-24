@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MeetRepository extends JpaRepository<Meet,Integer> {
+    boolean existsByMeetName(String meetName);
 }
