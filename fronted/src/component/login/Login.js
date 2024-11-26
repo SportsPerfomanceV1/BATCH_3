@@ -60,11 +60,16 @@ const Login = () => {
       }
       
     } catch (error) {
-      if (error.response && error.response.data) {
-        setError(error.response.data.error || 'Login failed. Please try again.');
-      } else {
-        setError('Login failed. Please try again.');
-      }
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+        setError(error.response.data || 'An error occurred');
+    } else if (error.request) {
+        console.error('Error request:', error.request);
+        setError('No response received from the server');
+    } else {
+        console.error('Error message:', error.message);
+        setError('Error in setting up the request');
+    }
     }
   };
 
