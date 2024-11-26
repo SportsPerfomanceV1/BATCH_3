@@ -57,7 +57,7 @@ const Dashboard = () => {
                         <li><Link to="/result">Results</Link></li>
                         <li><Link to="/coaches">Coaches</Link></li>
                         <li><Link to="/athelete">Athletes</Link></li>
-                        <li><Link to="/athelete">Profile</Link></li>
+                        <li><Link to="/admindashboard">Profile</Link></li>
                         <li><Link to="/home">Logout</Link></li>
                     </ul>
                 </nav>

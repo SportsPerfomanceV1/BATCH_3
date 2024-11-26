@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
+
 const Navbar = () => {
     const [isAdmin, setIsAdmin] = useState(false);
     const navigate = useNavigate();
@@ -15,10 +16,14 @@ const Navbar = () => {
         <nav className="navbar">
             <div className="navbar-left">
                 <h1 className="navbar-title">Athletics</h1>
+
+
                 {/* <select className="user-admin-select" onChange={handleUserSelection}>
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
-                </select> */}
+                </select> */} 
+                
+
             </div>
             <ul className="nav-links">
                 <li><Link to="/home">Home</Link></li>
