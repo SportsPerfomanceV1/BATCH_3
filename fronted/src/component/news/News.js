@@ -55,6 +55,7 @@ const newsArticles = [
 ];
 
 const News = () => {
+  
   return (
     <div className="news-container">
       <h1>Latest  News</h1>
