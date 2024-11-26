@@ -6,6 +6,7 @@ const ProfileCard = ({ profile, onDelete }) => {
   if (!profile) return null; 
 
   return (
+    
     <div className="profile-card1">
       <img src={profile.image} alt={profile.name} className="profile-image1" />
       <h3>{profile.name}</h3>

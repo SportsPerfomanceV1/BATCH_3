@@ -32,18 +32,31 @@ const Login = () => {
       setError('');
       setMessage('');
 
-      const response = await axios.post('http://localhost:8080/auth/login',formData);
+      const authHeader = {
+        headers: {
+          Authorization: 'Bearer YOUR_ACCESS_TOKEN', 
+        },
+      };
+
+      const response = await axios.post(
+        'http://localhost:8080/auth/login',
+        formData,
+        authHeader
+      );
+
 
       const { role } = response.data; 
       
       setMessage("Login successful"); 
 
-     
       if (role === 'admin') {
         navigate('/admin');
       } else if (role === 'athlete') {
         navigate('/athlete');
-      } else {
+      } else if(role === 'coaches'){
+        navigate('/coaches');
+      }
+      else {
         navigate('/dashboard');
       }
     } catch (error) {

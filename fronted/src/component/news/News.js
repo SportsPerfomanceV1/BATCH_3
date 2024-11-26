@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './News.css';
 
 const newsArticles = [
@@ -55,18 +56,34 @@ const newsArticles = [
 ];
 
 const News = () => {
-  
   return (
-    <div className="news-container">
-      <h1>Latest  News</h1>
-      <div className="news-list">
-        {newsArticles.map((article, index) => (
-          <div className="news-card" key={index}>
-            <h2 className="news-title">{article.title}</h2>
-            <p className="news-description">{article.description}</p>
-            <span className="news-date">{article.date}</span>
-          </div>
-        ))}
+    <div>
+      <header className="navbar1">
+        <h1 className="logo1">Athletics</h1>
+        <nav>
+          <ul className="navbar-links1">
+            <li><Link to="/news">News</Link></li>
+            <li><Link to="/events">Events</Link></li>
+            <li><Link to="/results">Results</Link></li>
+            <li><Link to="/coaches">Coaches</Link></li>
+            <li><Link to="/athletes">Athletes</Link></li>
+            <li><Link to="/profile">Profile</Link></li>
+            <li><Link to="/logout">Logout</Link></li>
+          </ul>
+        </nav>
+      </header>
+      
+      <div className="news-container">
+        <h1>Latest News</h1>
+        <div className="news-list">
+          {newsArticles.map((article, index) => (
+            <div className="news-card" key={index}>
+              <h2 className="news-title">{article.title}</h2>
+              <p className="news-description">{article.description}</p>
+              <span className="news-date">{article.date}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
