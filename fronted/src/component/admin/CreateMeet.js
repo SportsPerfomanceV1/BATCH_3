@@ -5,9 +5,6 @@ import './CreateMeet.css';
 const CreateMeet = () => {
     const [formData, setFormData] = useState({
         meetName: '',
-        date: '',
-        location: '',
-        description: '',
     });
 
     const [loading, setLoading] = useState(false);
@@ -15,10 +12,20 @@ const CreateMeet = () => {
     const [success, setSuccess] = useState('');
     const [createdMeets, setCreatedMeets] = useState([]);
 
+    const getAuthHeader = () => {
+        const token = localStorage.getItem('authToken');
+        return {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+    };
+
     // Fetch created meets from the backend
     const fetchCreatedMeets = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/meet/getAll');
+            const authHeader = getAuthHeader();
+            const response = await axios.get('http://localhost:8080/meet/getAll', authHeader);
             setCreatedMeets(response.data);
         } catch (error) {
             console.error('Error fetching created meets:', error);
@@ -43,9 +50,11 @@ const CreateMeet = () => {
         setSuccess('');
 
         try {
+            const authHeader = getAuthHeader();
             const response = await axios.post(
                 'http://localhost:8080/meet/create/admin',
-                formData
+                formData,
+                authHeader
             );
             setSuccess('Meet created successfully!');
             setFormData({
@@ -57,7 +66,16 @@ const CreateMeet = () => {
            
             fetchCreatedMeets();
         } catch (error) {
-            setError('Failed to create the meet. Please try again.');
+            if (error.response) {
+                console.error('Error response:', error.response.data);
+                setError(error.response.data || 'An error occurred');
+            } else if (error.request) {
+                console.error('Error request:', error.request);
+                setError('No response received from the server');
+            } else {
+                console.error('Error message:', error.message);
+                setError('Error in setting up the request');
+            }
         } finally {
             setLoading(false);
         }
@@ -81,41 +99,6 @@ const CreateMeet = () => {
                     />
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="date">Date</label>
-                    <input
-                        type="date"
-                        id="date"
-                        name="date"
-                        value={formData.date}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="location">Location</label>
-                    <input
-                        type="text"
-                        id="location"
-                        name="location"
-                        value={formData.location}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="description">Description</label>
-                    <textarea
-                        id="description"
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
                 <button type="submit" className="submit-button" disabled={loading}>
                     {loading ? 'Creating...' : 'Create Meet'}
                 </button>
@@ -127,9 +110,6 @@ const CreateMeet = () => {
                     createdMeets.map((meet) => (
                         <div key={meet.id} className="meet-card">
                             <h4>{meet.meetName}</h4>
-                            <p><strong>Date:</strong> {meet.date}</p>
-                            <p><strong>Location:</strong> {meet.location}</p>
-                            <p><strong>Description:</strong> {meet.description}</p>
                         </div>
                     ))
                 ) : (
