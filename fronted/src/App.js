@@ -16,6 +16,7 @@ import AdminDashboard from './component/admin/AdminDashboard';
 import CreateMeet from './component/admin/CreateMeet';
 import CreateEvent from './component/admin/CreateEvent';
 import RegisterCoach from './component/admin/RegisterCoach';
+import Dashboard from './component/dashboard/Dashboard';
 function App() {
   return (
     <Router>
@@ -38,6 +39,7 @@ function App() {
               <Route path="/result" element={<Result />} />
               <Route path="/login" element={<Login />} /> 
               <Route path="/register" element={<Register />} />
+              <Route path="/dashboard" element={<Dashboard/>}/>
             </Routes>
           </div>
           

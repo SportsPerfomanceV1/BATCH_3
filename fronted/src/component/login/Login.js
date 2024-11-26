@@ -32,21 +32,42 @@ const Login = () => {
       setError('');
       setMessage('');
 
-      const response = await axios.post('http://localhost:8080/auth/login',formData);
+      const authHeader = {
+        headers: {
+          Authorization: 'Bearer YOUR_ACCESS_TOKEN', 
+        },
+      };
 
+      const response = await axios.post(
+        'http://localhost:8080/auth/login',
+        formData,
+        authHeader
+      );
+
+
+      const { role } = response.data; 
+      
       setMessage("Login successful"); 
-      navigate('/home'); 
+
+      if (role === 'admin') {
+        navigate('/admin');
+      } else if (role === 'athlete') {
+        navigate('/athlete');
+      } else if(role === 'coaches'){
+        navigate('/coaches');
+      }
+      else {
+        navigate('/dashboard');
+      }
     } catch (error) {
       if (error.response && error.response.data) {
         setError(error.response.data.error || 'Login failed. Please try again.');
       } else {
         setError('Login failed. Please try again.');
-
       }
     }
   };
 
-  
   return (
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
@@ -69,6 +90,7 @@ const Login = () => {
         <label htmlFor="password">Password</label>
         <div className="password-container">
           <input 
+            type={showPassword ? "text" : "password"}
             id="password" 
             name="password" 
             placeholder="Enter your password" 
@@ -77,6 +99,13 @@ const Login = () => {
             value={formData.password}
             onChange={handleChange} 
           />
+          <button
+            type="button"
+            onClick={togglePasswordVisibility}
+            className="toggle-password-btn"
+          >
+            {showPassword ? "Hide" : "Show"}
+          </button>
         </div>
 
         <button type="submit" className="submit-btn">Login</button>
