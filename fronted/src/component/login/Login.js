@@ -45,20 +45,20 @@ const Login = () => {
       );
 
 
-      const { role } = response.data; 
+      const { role } = response.data;
+      const { token } = response.data;
+      localStorage.setItem('authToken', token);
       
       setMessage("Login successful"); 
 
-      if (role === 'admin') {
-        navigate('/admin');
-      } else if (role === 'athlete') {
-        navigate('/athlete');
-      } else if(role === 'coaches'){
+      if (role === 'ADMIN') {
+        navigate('/admindashboard');
+      } else if (role === 'ATHLETE') {
+        navigate('/athelete');
+      } else if(role === 'COACH'){
         navigate('/coaches');
       }
-      else {
-        navigate('/dashboard');
-      }
+      
     } catch (error) {
       if (error.response && error.response.data) {
         setError(error.response.data.error || 'Login failed. Please try again.');

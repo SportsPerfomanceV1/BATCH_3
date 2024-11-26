@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import './RegisterCoach.css';
+import axios from 'axios';
 
 const RegisterCoach = () => {
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
         email: '',
-        phone: '',
-        sport: '',
-        experience: '',
+        password: '',
     });
 
     const [successMessage, setSuccessMessage] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState(''); 
+
+    const togglePasswordVisibility = () => {
+        setShowPassword((prevShowPassword) => !prevShowPassword);
+      };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -21,101 +24,90 @@ const RegisterCoach = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const getAuthHeader = () => {
+        const token = localStorage.getItem('authToken');
+        return {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // Here you can handle form submission, e.g., send data to the server
-        console.log('Registering Coach:', formData);
-        setSuccessMessage('Coach registered successfully!');
-        // Reset form
-        setFormData({
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            sport: '',
-            experience: '',
-        });
+        try{
+            setError('');
+            setSuccessMessage('');
+
+            const authHeader = getAuthHeader();
+            await axios.post(
+                'http://localhost:8080/auth/registerCoach/admin',
+                formData,
+                authHeader
+            );
+            console.log('Registering Coach:', formData);
+            setSuccessMessage('Coach registered successfully!');
+            // Reset form
+            setFormData({
+                email: '',
+            password: '',
+            });
+        } catch (error) {
+            if (error.response) {
+                console.error('Error response:', error.response.data);
+                setError(error.response.data || 'An error occurred');
+            } else if (error.request) {
+                console.error('Error request:', error.request);
+                setError('No response received from the server');
+            } else {
+                console.error('Error message:', error.message);
+                setError('Error in setting up the request');
+            }
+        }
+        
     };
 
     return (
         <div className="register-coach-container">
             <h2>Register Coach</h2>
             {successMessage && <p className="success-message">{successMessage}</p>}
+            {error && <div className="error-message">{error}</div>}
             <form onSubmit={handleSubmit} className="register-coach-form">
-                <div className="form-group">
-                    <label htmlFor="firstName">First Name:</label>
-                    <input 
-                        type="text" 
-                        id="firstName" 
-                        name="firstName" 
-                        value={formData.firstName} 
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
+            <label htmlFor="email">Email</label>
+            <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            placeholder="Enter your email" 
+            required 
+            className="form-input"
+            value={formData.email}
+            onChange={handleChange} 
+            />
+            
+            <label htmlFor="password">Password</label>
+            <div className="password-container">
+            <input 
+                type={showPassword ? "text" : "password"}
+                id="password" 
+                name="password" 
+                placeholder="Enter your password" 
+                required 
+                className="form-input"
+                value={formData.password}
+                onChange={handleChange} 
+            />
+            <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="toggle-password-btn"
+            >
+                {showPassword ? "Hide" : "Show"}
+            </button>
+            </div>
                 
-                <div className="form-group">
-                    <label htmlFor="lastName">Last Name:</label>
-                    <input 
-                        type="text" 
-                        id="lastName" 
-                        name="lastName" 
-                        value={formData.lastName} 
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
-                
-                <div className="form-group">
-                    <label htmlFor="email">Email:</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
-                        value={formData.email} 
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
-                
-                <div className="form-group">
-                    <label htmlFor="phone">Phone Number:</label>
-                    <input 
-                        type="tel" 
-                        id="phone" 
-                        name="phone" 
-                        value={formData.phone} 
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
-                
-                <div className="form-group">
-                    <label htmlFor="sport">Sport:</label>
-                    <input 
-                        type="text" 
-                        id="sport" 
-                        name="sport" 
-                        value={formData.sport} 
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
-                
-                <div className="form-group">
-                    <label htmlFor="experience">Years of Experience:</label>
-                    <input 
-                        type="number" 
-                        id="experience" 
-                        name="experience" 
-                        value={formData.experience} 
-                        onChange={handleChange} 
-                        min="0"
-                        required 
-                    />
-                </div>
-                
-                <button type="submit" className="submit-button">Register Coach</button>
+            <button type="submit" className="submit-button">Register Coach</button>
             </form>
         </div>
     );
