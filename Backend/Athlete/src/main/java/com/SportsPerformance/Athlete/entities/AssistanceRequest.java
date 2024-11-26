@@ -17,10 +17,16 @@ public class AssistanceRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int assistanceRequestId;
+    
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "athleteId", referencedColumnName = "athleteId", nullable = false)
+    private Athlete athlete;
 
-    private int athleteId;
     private int coachId;
+
+    @Column(nullable = false)
     private String status;
+
     private String remarks;
 
     @CreationTimestamp

@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AssistanceRequestRepository extends JpaRepository<AssistanceRequest, Integer> {
 
-    boolean existsByAthleteIdAndStatus(int athleteId, String status);
+    boolean existsByAthlete_AthleteIdAndStatus(int athleteId, String status);
 
 }

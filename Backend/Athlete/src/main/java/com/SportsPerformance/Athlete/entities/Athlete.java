@@ -1,9 +1,6 @@
 package com.SportsPerformance.Athlete.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,14 +15,23 @@ public class Athlete {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int athleteId;
-    private int userId;          // Identifies the user associated with the athlete
+    @Column(nullable = false)
+    private int userId;
+    @Column(nullable = false)
     private String firstName;
+    @Column(nullable = false)
     private String lastName;
-    private LocalDate birthDate; // Assuming this is handled as a `LocalDate`
+    @Column(nullable = false)
+    private LocalDate birthDate;
+    @Column(nullable = false)
     private String gender;
+    @Column(nullable = false)
     private float height;
+    @Column(nullable = false)
     private float weight;
+    @Column(nullable = false)
     private String category;
-    private int coachId;         // If a coach is assigned, their ID will be stored here
+    private int coachId;
+    @Column(nullable = false)
     private String photoUrl;
 }
