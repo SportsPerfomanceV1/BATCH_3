@@ -38,6 +38,9 @@ public class AuthService {
 
     public User registerUser(RegisterDto registerDto){
 
+        if (userRepository.findByEmail(registerDto.getEmail()).isPresent()){
+            throw new IllegalArgumentException("Email already exists");
+        }
         Optional<Role> optionalRole = roleRepository.findByName(Roles.ATHLETE);
         if (optionalRole.isEmpty()){
             return null;
@@ -46,7 +49,6 @@ public class AuthService {
         User user = new User();
         user.setEmail(registerDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-        user.setFullName(registerDto.getFullName());
         user.setRole(optionalRole.get());
         return userRepository.save(user);
     }
@@ -69,6 +71,10 @@ public class AuthService {
     }
 
     public User registerCoach(RegisterDto registerDto) {
+        if (userRepository.findByEmail(registerDto.getEmail()).isPresent()){
+            throw new IllegalArgumentException("Email already exists");
+        }
+
         Optional<Role> optionalRole = roleRepository.findByName(Roles.COACH);
         if (optionalRole.isEmpty()){
             return null;
@@ -76,7 +82,6 @@ public class AuthService {
 
         User user = new User();
         user.setEmail(registerDto.getEmail());
-        user.setFullName(registerDto.getFullName());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         user.setRole(optionalRole.get());
 

@@ -14,8 +14,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystemException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class AthleteService {
@@ -25,7 +27,7 @@ public class AthleteService {
     private final AssistanceRequestRepository assistanceRequestRepository;
     private final WebClient.Builder builder;
 
-    String FOLDER_PATH = "C:/Users/LENOVO/OneDrive/Desktop/BATCH_3/Backend/Athlete/src/main/java/com/SportsPerformance/Athlete/Img/";
+    String FOLDER_PATH = "C:/Users/LENOVO/OneDrive/Desktop/BATCH_3/Backend/Img/Athletes/";
     String url = "http://USER-SERVICE/auth/getUserIdFromToken?token=";
     public AthleteService(AthleteRepository athleteRepository, ObjectMapper mapper, AssistanceRequestRepository assistanceRequestRepository, WebClient.Builder builder) {
         this.athleteRepository = athleteRepository;
@@ -41,11 +43,15 @@ public class AthleteService {
         int userId = builder.build().get().uri(url + token)
                 .retrieve().bodyToMono(Integer.class).block();
 
-        if (athleteRepository.existsByUserId(userId)){
-            throw new RuntimeException("user already exists");
+        if (athleteRepository.existsByUserId(userId)) {
+            throw new IllegalArgumentException("user already exists");
         }
-
-        String filePath = saveFile(file);
+        String filePath;
+        try {
+            filePath = saveFile(file);
+        } catch (Exception e) {
+            throw new FileSystemException("Failed to upload image");
+        }
         AthleteRequestDto athleteRequestDto = mapper.readValue(athleteData, AthleteRequestDto.class);
 
         Athlete athlete = new Athlete();
@@ -61,19 +67,6 @@ public class AthleteService {
         return athleteRepository.save(athlete);
     }
 
-    private static Athlete getAthlete(AthleteRequestDto athleteRequestDto, String filePath) {
-        Athlete athlete = new Athlete();
-        athlete.setFirstName(athleteRequestDto.getFirstName());
-        athlete.setLastName(athleteRequestDto.getLastName());
-        athlete.setBirthDate(LocalDate.parse(athleteRequestDto.getBirthDate()));
-        athlete.setGender(athleteRequestDto.getGender());
-        athlete.setHeight(athleteRequestDto.getHeight());
-        athlete.setWeight(athleteRequestDto.getWeight());
-        athlete.setCategory(athleteRequestDto.getCategory());
-        athlete.setPhotoUrl(filePath);
-        return athlete;
-    }
-
     public Athlete getAthlete(String name) {
         String[] names = name.split(" ", 2);
         if (names.length != 2){
@@ -85,7 +78,8 @@ public class AthleteService {
     }
 
     public Athlete getAthleteById(int athleteId) {
-        return athleteRepository.findById(athleteId).orElse(null);
+        return athleteRepository.findById(athleteId)
+                .orElseThrow(() -> new NoSuchElementException("Athlete with id:"+athleteId+" not found"));
     }
 
     public List<Athlete> getAll() {
@@ -93,11 +87,15 @@ public class AthleteService {
     }
 
     public Athlete findAthleteByUserId(int userId){
-        return athleteRepository.findByUserId(userId);
+        Athlete athlete = athleteRepository.findByUserId(userId);
+        if (athlete == null) {
+            throw new NoSuchElementException("Athlete not found for userId: " + userId);
+        }
+        return athlete;
     }
 
     public int findAthleteIdByUserId(int userId){
-        Athlete athlete = athleteRepository.findByUserId(userId);
+        Athlete athlete = findAthleteByUserId(userId);
         return athlete.getAthleteId();
     }
 
@@ -108,7 +106,7 @@ public class AthleteService {
                 .retrieve().bodyToMono(Integer.class).block();
 
         AthleteRequestDto athleteRequestDto = mapper.readValue(athleteData, AthleteRequestDto.class);
-        Athlete athlete = athleteRepository.findByUserId(userId);
+        Athlete athlete = findAthleteByUserId(userId);
         athlete.setFirstName(athleteRequestDto.getFirstName());
         athlete.setLastName(athleteRequestDto.getLastName());
         athlete.setBirthDate(LocalDate.parse(athleteRequestDto.getBirthDate()));
@@ -117,8 +115,12 @@ public class AthleteService {
         athlete.setWeight(athleteRequestDto.getWeight());
         athlete.setCategory(athleteRequestDto.getCategory());
         if (file != null){
-            String filePath = saveFile(file);
-            athlete.setPhotoUrl(filePath);
+            try {
+                String filePath = saveFile(file);
+                athlete.setPhotoUrl(filePath);
+            }catch (Exception e){
+                throw new FileSystemException("Failed to upload image");
+            }
         }
 
         return athleteRepository.save(athlete);
@@ -141,19 +143,20 @@ public class AthleteService {
         int userId = builder.build().get().uri(url + token)
                 .retrieve().bodyToMono(Integer.class).block();
         int athleteId = findAthleteIdByUserId(userId);
+        Athlete athlete = findAthleteByUserId(userId);
 
 
-        boolean existSent = assistanceRequestRepository.existsByAthleteIdAndStatus(athleteId, "sent");
-        boolean existApprove = assistanceRequestRepository.existsByAthleteIdAndStatus(athleteId, "approved");
+        boolean existSent = assistanceRequestRepository.existsByAthlete_AthleteIdAndStatus(athleteId, "pending");
+        boolean existApprove = assistanceRequestRepository.existsByAthlete_AthleteIdAndStatus(athleteId, "approved");
 
         if(existSent || existApprove) {
             throw new IllegalStateException("The request has already been approved or is currently pending approval");
         }
         else {
             AssistanceRequest request = new AssistanceRequest();
-            request.setAthleteId(athleteId);
+            request.setAthlete(athlete);
             request.setCoachId(assistanceRequestDto.getCoachId());
-            request.setStatus("sent");
+            request.setStatus("pending");
             return assistanceRequestRepository.save(request);
         }
 
