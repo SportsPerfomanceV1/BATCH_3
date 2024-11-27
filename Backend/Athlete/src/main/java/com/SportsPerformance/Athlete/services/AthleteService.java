@@ -36,12 +36,14 @@ public class AthleteService {
         this.builder = builder;
     }
 
-
+    public int getUserId(HttpServletRequest request){
+        String token = request.getHeader("Authorization").substring(7);
+        return builder.build().get().uri(url + token)
+                .retrieve().bodyToMono(Integer.class).block();
+    }
 
     public Athlete createProfile(HttpServletRequest request, String athleteData, MultipartFile file) throws IOException {
-        String token = request.getHeader("Authorization").substring(7);
-        int userId = builder.build().get().uri(url + token)
-                .retrieve().bodyToMono(Integer.class).block();
+        int userId = getUserId(request);
 
         if (athleteRepository.existsByUserId(userId)) {
             throw new IllegalArgumentException("user already exists");
@@ -67,7 +69,7 @@ public class AthleteService {
         return athleteRepository.save(athlete);
     }
 
-    public Athlete getAthlete(String name) {
+    public Athlete getAthleteByName(String name) {
         String[] names = name.split(" ", 2);
         if (names.length != 2){
             throw new IllegalArgumentException("Full name must consist of first name and last name");
@@ -89,7 +91,7 @@ public class AthleteService {
     public Athlete findAthleteByUserId(int userId){
         Athlete athlete = athleteRepository.findByUserId(userId);
         if (athlete == null) {
-            throw new NoSuchElementException("Athlete not found for userId: " + userId);
+            throw new NoSuchElementException("Athlete not found");
         }
         return athlete;
     }
@@ -101,12 +103,10 @@ public class AthleteService {
 
     public Athlete editAthlete(HttpServletRequest request, String athleteData, MultipartFile file) throws IOException {
 
-        String token = request.getHeader("Authorization").substring(7);
-        int userId = builder.build().get().uri(url + token)
-                .retrieve().bodyToMono(Integer.class).block();
+        int userId = getUserId(request);
 
-        AthleteRequestDto athleteRequestDto = mapper.readValue(athleteData, AthleteRequestDto.class);
         Athlete athlete = findAthleteByUserId(userId);
+        AthleteRequestDto athleteRequestDto = mapper.readValue(athleteData, AthleteRequestDto.class);
         athlete.setFirstName(athleteRequestDto.getFirstName());
         athlete.setLastName(athleteRequestDto.getLastName());
         athlete.setBirthDate(LocalDate.parse(athleteRequestDto.getBirthDate()));
@@ -114,6 +114,7 @@ public class AthleteService {
         athlete.setHeight(athleteRequestDto.getHeight());
         athlete.setWeight(athleteRequestDto.getWeight());
         athlete.setCategory(athleteRequestDto.getCategory());
+
         if (file != null){
             try {
                 String filePath = saveFile(file);
@@ -139,9 +140,7 @@ public class AthleteService {
 
     public AssistanceRequest requestAssistance(HttpServletRequest httpServletRequest,AssistanceRequestDto assistanceRequestDto) {
 
-        String token = httpServletRequest.getHeader("Authorization").substring(7);
-        int userId = builder.build().get().uri(url + token)
-                .retrieve().bodyToMono(Integer.class).block();
+        int userId = getUserId(httpServletRequest);
         int athleteId = findAthleteIdByUserId(userId);
         Athlete athlete = findAthleteByUserId(userId);
 
@@ -160,5 +159,10 @@ public class AthleteService {
             return assistanceRequestRepository.save(request);
         }
 
+    }
+
+    public Athlete getAthlete(HttpServletRequest request) {
+        int userId = getUserId(request);
+        return findAthleteByUserId(userId);
     }
 }

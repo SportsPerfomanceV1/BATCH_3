@@ -40,12 +40,12 @@ public class AthleteController {
     }
 
     @GetMapping("/getByName/coach")
-    public ResponseEntity<Athlete> getAthlete(@RequestBody String name) {
-        Athlete athlete = athleteService.getAthlete(name);
+    public ResponseEntity<Athlete> getAthleteByName(@RequestBody String name) {
+        Athlete athlete = athleteService.getAthleteByName(name);
         return ResponseEntity.ok(athlete);
     }
 
-    @GetMapping("/getById/{athleteId}/coach")
+    @GetMapping("/getById/{athleteId}")
     public ResponseEntity<?> getAthleteById(@PathVariable int athleteId) {
         try {
             Athlete athlete = athleteService.getAthleteById(athleteId);
@@ -80,6 +80,16 @@ public class AthleteController {
     public ResponseEntity<Athlete> findAthleteByUserId(@PathVariable int userId){
         Athlete athlete = athleteService.findAthleteByUserId(userId);
         return  ResponseEntity.ok(athlete);
+    }
+
+    @GetMapping("/getAthlete")
+    public ResponseEntity<?> getAthlete(HttpServletRequest request){
+        try {
+            Athlete athlete = athleteService.getAthlete(request);
+            return  ResponseEntity.ok(athlete);
+        }catch (NoSuchElementException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @GetMapping("/getIdByUserId/{userId}/coach")

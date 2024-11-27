@@ -40,6 +40,16 @@ public class RegistrationController {
         }
     }
 
+    @GetMapping("/getRegistrationsByAthlete")
+    public ResponseEntity<?> getRegistrationsByAthlete(HttpServletRequest request){
+        try {
+            List<Registration> registrations = registrationService.getRegistrationsByAthlete(request);
+            return ResponseEntity.ok(registrations);
+        }catch (NoSuchElementException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @GetMapping("/getRegistration/{registrationId}/admin")
     public ResponseEntity<?> getRegistration(@PathVariable int registrationId){
         try {

@@ -1,13 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Athlete.css';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
+import AthleteRegistrationForm from './athleteRegistration.js';
+import AthleteUpdateForm from './AthleteUpdateForm';
 
 const Athlete = () => {
     const [activeTab, setActiveTab] = useState('Overview');
+    const [error, setError] = useState('');
+    const [athleteData, setAthleteData] = useState([]);
+    const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+    const [showUpdateForm, setShowUpdateForm] = useState(false);
 
     const handleTabClick = (tab) => {
         setActiveTab(tab);
     };
+
+    const handleRegister = (newAthleteData) => {
+        setAthleteData(newAthleteData);
+    };
+
+    const getAuthHeader = () => {
+        const token = localStorage.getItem('authToken');
+        return {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+    };
+
+    const fetchAthleteData = async () => {
+        try {
+            const authHeader = getAuthHeader();
+            const response = await axios.get('http://localhost:8080/athletes/getAthlete', authHeader);
+            setAthleteData(response.data);
+        } catch (error) {
+            if (error.response) {
+              console.error('Error response:', error.response.data);
+              setError(error.response.data || 'An error occurred');
+              if(error.response.data == 'Athlete not found'){
+                alert('Please update your details');
+                setShowRegistrationForm(true);
+              }
+          } else if (error.request) {
+              console.error('Error request:', error.request);
+              setError('No response received from the server');
+          } else {
+              console.error('Error message:', error.message);
+              setError('Error in setting up the request');
+          }
+          }
+    };
+
+    useEffect(() => {
+        fetchAthleteData();
+    }, []);
+
+    const handleUpdate = (updatedAthleteData) => {
+        setAthleteData(updatedAthleteData);
+        setShowUpdateForm(false);
+    };
+
 
     return (
         <div>
@@ -26,23 +79,28 @@ const Athlete = () => {
             </nav>
         </header>
         <div className="athlete-container">
+        {showRegistrationForm ? (
+                    <AthleteRegistrationForm onClose={() => setShowRegistrationForm(false)} onRegister={handleRegister}/>
+                ) : showUpdateForm ? (
+                    <AthleteUpdateForm athleteData={athleteData} onClose={() => setShowUpdateForm(false)} onUpdate={handleUpdate} />
+                ) : (
             <div className="athlete-profile">
                 <div className="profile-card">
-                    <img 
-                        src="https://i.pinimg.com/originals/ff/10/7d/ff107dd98f5c0c69990a1ca57a850b9a.jpg" 
-                        alt="Profile" 
-                        className="profile-image" 
-                    />
-                    <div className="profile-info">
-                        <h2>Damon Salvatore</h2>
-                        <p>Date of Birth: 10/10/2000</p>
-                        <p>Gender: Male</p>
-                        <p>Height: 170 cm</p>
-                        <p>Weight: 60 kg</p>
-                        <p>Category: 100M</p>
-                        <p>Coach: N/A</p>
-                    </div>
-                    <button className="edit-button">✏️ Edit Profile</button>
+                <img 
+                            src={athleteData.photoUrl} 
+                            alt={`${athleteData.firstName} ${athleteData.lastName}`} 
+                            className="profile-image" 
+                        />
+                        <div className="profile-info">
+                            <h2>{`${athleteData.firstName} ${athleteData.lastName}`}</h2>
+                            <p>Date of Birth: {athleteData.birthDate}</p>
+                            <p>Gender: {athleteData.gender}</p>
+                            <p>Height: {athleteData.height} cm</p>
+                            <p>Weight: {athleteData.weight} kg</p>
+                            <p>Category: {athleteData.category}</p>
+                            <p>Coach: {athleteData.coachId ? athleteData.coachId : 'N/A'}</p>
+                        </div>
+                    <button className="edit-button" onClick={() => setShowUpdateForm(true)}>✏️ Edit Profile</button>
                 </div>
 
                 <div className="tabs">
@@ -181,6 +239,7 @@ const Athlete = () => {
                     </div>
                 </div>
             </div>
+                )}
         </div>
         </div>
     );

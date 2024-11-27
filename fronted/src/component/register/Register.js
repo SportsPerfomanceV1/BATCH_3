@@ -5,10 +5,8 @@ import axios from 'axios';
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
     password: '',
-    role: '' 
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -33,11 +31,16 @@ const Register = () => {
       navigate('/login'); 
 
     } catch (error) {
-      if (error.response && error.response.data) {
-        setErrorMessage(error.response.data.error || 'Registration failed. Please check your details.');
-      } else {
-        setErrorMessage('Registration failed. Please check your details.');
-      }
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+        setErrorMessage(error.response.data || 'An error occurred');
+    } else if (error.request) {
+        console.error('Error request:', error.request);
+        setErrorMessage('No response received from the server');
+    } else {
+        console.error('Error message:', error.message);
+        setErrorMessage('Error in setting up the request');
+    }
     }
   };
 
@@ -48,17 +51,6 @@ const Register = () => {
 
         {errorMessage && <div className="error-message">{errorMessage}</div>} 
         
-        <label htmlFor="name">Full Name</label>
-        <input 
-          type="text" 
-          id="name" 
-          name="name" 
-          value={formData.name} 
-          onChange={handleChange} 
-          required 
-          className="form-input"
-        />
-
         <label htmlFor="email">Email</label>
         <input 
           type="email" 
@@ -85,20 +77,6 @@ const Register = () => {
             {showPassword ? 'Hide' : 'Show'}
           </button>
         </div>
-
-        <label htmlFor="role">Role</label>
-        <select 
-          id="role" 
-          name="role" 
-          value={formData.role} 
-          onChange={handleChange} 
-          required 
-          className="form-input"
-        >
-          <option value="" disabled>Select your role</option>
-          <option value="Coach">Coach</option>
-          <option value="Athlete">Athlete</option>
-        </select>
 
         <button type="submit" className="submit-btn">Register</button>
 

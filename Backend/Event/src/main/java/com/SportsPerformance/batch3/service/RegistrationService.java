@@ -24,11 +24,15 @@ public class RegistrationService {
         this.builder = builder;
     }
 
-    public Registration registerEvent(HttpServletRequest request, RegistrationRequestDto registrationRequestDto) {
+    public int getUserId(HttpServletRequest request){
         String token = request.getHeader("Authorization").substring(7);
-        int userId = builder.build().get()
+        return builder.build().get()
                 .uri("http://USER-SERVICE/auth/getUserIdFromToken?token=" + token)
                 .retrieve().bodyToMono(Integer.class).block();
+    }
+
+    public Registration registerEvent(HttpServletRequest request, RegistrationRequestDto registrationRequestDto) {
+        int userId = getUserId(request);
 
         int athleteId = builder.build().get().uri("http://ATHLETE-SERVICE/athletes/getIdByUserId/"+ userId + "/coach")
                 .retrieve().bodyToMono(Integer.class).block();
@@ -70,5 +74,16 @@ public class RegistrationService {
         Registration registration = getRegistration(registrationId);
         registration.setStatus("rejected");
         registrationRepository.save(registration);
+    }
+
+    public List<Registration> getRegistrationsByAthlete(HttpServletRequest request) {
+        int userId = getUserId(request);
+        int athleteId = builder.build().get().uri("http://ATHLETE-SERVICE/athletes/getIdByUserId/"+ userId + "/coach")
+                .retrieve().bodyToMono(Integer.class).block();
+        List<Registration> registrations = registrationRepository.findAllByAthleteId(athleteId);
+        if (registrations.isEmpty()){
+            throw new NoSuchElementException("No registrations found");
+        }
+        return registrations;
     }
 }
