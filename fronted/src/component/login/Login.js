@@ -32,16 +32,9 @@ const Login = () => {
       setError('');
       setMessage('');
 
-      const authHeader = {
-        headers: {
-          Authorization: 'Bearer YOUR_ACCESS_TOKEN', 
-        },
-      };
-
       const response = await axios.post(
         'http://localhost:8080/auth/login',
-        formData,
-        authHeader
+        formData
       );
 
 

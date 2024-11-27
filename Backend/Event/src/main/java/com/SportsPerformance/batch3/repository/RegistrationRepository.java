@@ -11,4 +11,6 @@ public interface RegistrationRepository extends JpaRepository<Registration, Inte
     List<Registration> findAllByEvent_EventId(int eventId);
 
     boolean existsByEvent_EventIdAndAthleteId(int eventId, int athleteId);
+
+    List<Registration> findAllByAthleteId(int athleteId);
 }
