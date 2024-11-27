@@ -4,6 +4,7 @@ import com.SportsPerformance.Athlete.dtos.AssistanceRequestDto;
 import com.SportsPerformance.Athlete.dtos.AthleteRequestDto;
 import com.SportsPerformance.Athlete.entities.AssistanceRequest;
 import com.SportsPerformance.Athlete.entities.Athlete;
+import com.SportsPerformance.Athlete.entities.Coach;
 import com.SportsPerformance.Athlete.repositories.AssistanceRequestRepository;
 import com.SportsPerformance.Athlete.repositories.AthleteRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,14 +25,16 @@ public class AthleteService {
     private final ObjectMapper mapper;
     private final AssistanceRequestRepository assistanceRequestRepository;
     private final WebClient.Builder builder;
+    private final CoachService coachService;
 
     String FOLDER_PATH = "C:/Users/LENOVO/OneDrive/Desktop/BATCH_3/Backend/Athlete/src/main/java/com/SportsPerformance/Athlete/Img/";
     String url = "http://USER-SERVICE/auth/getUserIdFromToken?token=";
-    public AthleteService(AthleteRepository athleteRepository, ObjectMapper mapper, AssistanceRequestRepository assistanceRequestRepository, WebClient.Builder builder) {
+    public AthleteService(AthleteRepository athleteRepository, ObjectMapper mapper, AssistanceRequestRepository assistanceRequestRepository, WebClient.Builder builder, CoachService coachService) {
         this.athleteRepository = athleteRepository;
         this.mapper = mapper;
         this.assistanceRequestRepository = assistanceRequestRepository;
         this.builder = builder;
+        this.coachService = coachService;
     }
 
 
@@ -122,28 +125,38 @@ public class AthleteService {
         return athleteRepository.existsByFirstName(email);
     }*/
 
-    public AssistanceRequest requestAssistance(HttpServletRequest httpServletRequest,AssistanceRequestDto assistanceRequestDto) {
-
+    public AssistanceRequest requestAssistance(HttpServletRequest httpServletRequest, AssistanceRequestDto assistanceRequestDto) {
+        // Extract the user ID from the token
         String token = httpServletRequest.getHeader("Authorization").substring(7);
         int userId = builder.build().get().uri(url + token)
                 .retrieve().bodyToMono(Integer.class).block();
-        int athleteId = findAthleteIdByUserId(userId);
+
+        // Find the athlete
         Athlete athlete = findAthleteByUserId(userId);
 
+        // Check for existing requests
+        boolean existSent = assistanceRequestRepository.existsByAthlete_AthleteIdAndStatus(athlete.getAthleteId(), "pending");
+        boolean existApprove = assistanceRequestRepository.existsByAthlete_AthleteIdAndStatus(athlete.getAthleteId(), "approved");
 
-        boolean existSent = assistanceRequestRepository.existsByAthlete_AthleteIdAndStatus(athleteId, "pending");
-        boolean existApprove = assistanceRequestRepository.existsByAthlete_AthleteIdAndStatus(athleteId, "approved");
-
-        if(existSent || existApprove) {
+        if (existSent || existApprove) {
             throw new IllegalStateException("The request has already been approved or is currently pending approval");
         }
-        else {
-            AssistanceRequest request = new AssistanceRequest();
-            request.setAthlete(athlete);
-            request.setCoachId(assistanceRequestDto.getCoachId());
-            request.setStatus("pending");
-            return assistanceRequestRepository.save(request);
-        }
 
+        // Get the coach ID from the DTO
+        int coachId = assistanceRequestDto.getCoachId();  // Corrected to access via the DTO
+
+        // Fetch the coach
+        Coach coach = coachService.findById(coachId);  // No need for orElseThrow()
+
+        // Create and save the AssistanceRequest
+        AssistanceRequest request = new AssistanceRequest();
+        request.setAthlete(athlete);
+        request.setCoach(coach); // Set the coach object directly
+        request.setStatus("pending");
+        request.setRequestDetails(assistanceRequestDto.getRequestDetails());
+
+        return assistanceRequestRepository.save(request);
     }
+
+
 }

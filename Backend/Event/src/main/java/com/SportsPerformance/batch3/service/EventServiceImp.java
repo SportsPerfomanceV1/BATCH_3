@@ -36,8 +36,8 @@ public class EventServiceImp implements EventService{
         return saveEvent(event);
     }
     @Override
-    public Event getEventById(String eventId) {
-        Optional<Event> event = eventRepository.findById(Integer.parseInt(eventId));
+    public Event getEventById(int eventId) {
+        Optional<Event> event = eventRepository.findById(eventId);
         return event.orElse(null); // Return the event if found, otherwise null
     }
 
@@ -69,7 +69,23 @@ public class EventServiceImp implements EventService{
 
         return stats;
     }
+    @Override
+    public void addMultipleEvents(List<EventRequestDto> eventsRequestDto) {
+        for (EventRequestDto eventRequestDto : eventsRequestDto) {
+            Event event = convertToEntity(eventRequestDto);
+            saveEvent(event);
+        }
+    }
 
-
+    // Helper method to convert EventRequestDto to Event Entity
+    private Event convertToEntity(EventRequestDto eventRequestDto) {
+        Event event = new Event();
+        event.setEventTitle(eventRequestDto.getEventTitle());
+        event.setMeetName(eventRequestDto.getMeetName());
+        event.setCategory(eventRequestDto.getCategory());
+        event.setEventDate(eventRequestDto.getEventDate());
+        event.setLocation(eventRequestDto.getLocation());
+        return event;
+    }
 
 }

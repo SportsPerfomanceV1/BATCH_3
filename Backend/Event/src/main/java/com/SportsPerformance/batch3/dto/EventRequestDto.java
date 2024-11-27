@@ -1,12 +1,13 @@
 package com.SportsPerformance.batch3.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class EventRequestDto {
     private String eventTitle;
     private String meetName;

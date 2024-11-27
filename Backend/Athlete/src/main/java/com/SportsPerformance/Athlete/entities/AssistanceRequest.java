@@ -3,33 +3,36 @@ package com.SportsPerformance.Athlete.entities;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDate;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@Table(name = "assistance_requests")
+@Data
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class AssistanceRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int assistanceRequestId;
-    
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "athleteId", referencedColumnName = "athleteId", nullable = false)
+    private int requestId;
+
+    @ManyToOne
+    @JoinColumn(name = "athlete_id", nullable = false)
     private Athlete athlete;
 
-    private int coachId;
+    @ManyToOne
+    @JoinColumn(name = "coach_id", nullable = false)
+    private Coach coach;
 
     @Column(nullable = false)
-    private String status;
+    private String status; // e.g., "pending", "approved", "declined"
 
-    private String remarks;
+    private String remarks; // Additional remarks for approval/decline
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDate requestDate;
+    @Column(nullable = false)
+    private String requestDetails; // Details of the assistance request
+
+
 }

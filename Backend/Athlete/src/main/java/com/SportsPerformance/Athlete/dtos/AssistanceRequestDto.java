@@ -5,8 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class AssistanceRequestDto {
-    private int coachId;
+    private int coachId; // ID of the coach the request is directed to
+    private String requestDetails;
+    private String remarks;// Description/details of the request
 }

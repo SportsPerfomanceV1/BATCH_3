@@ -4,7 +4,9 @@ import com.SportsPerformance.Athlete.dtos.AssistanceRequestDto;
 import com.SportsPerformance.Athlete.entities.AssistanceRequest;
 import com.SportsPerformance.Athlete.entities.Athlete;
 import com.SportsPerformance.Athlete.services.AthleteService;
+import com.SportsPerformance.Athlete.services.CoachService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +17,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/athletes")
 public class AthleteController {
-
+    @Autowired
     private final AthleteService athleteService;
-
+    @Autowired
+    private CoachService coachService;
     public AthleteController(AthleteService athleteService) {
         this.athleteService = athleteService;
     }

@@ -20,7 +20,7 @@ public class ResultService {
     }
 
     public Result createResult(ResultRequestDto resultRequestDto) {
-        Event event = eventService.getEventById(resultRequestDto.getEventId());
+        Event event = eventService.getEventById(Integer.parseInt(resultRequestDto.getEventId()));
 
         Result result = new Result();
         result.setEvent(event);
