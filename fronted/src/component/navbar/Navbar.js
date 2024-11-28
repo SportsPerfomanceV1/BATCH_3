@@ -15,7 +15,7 @@ const Navbar = () => {
                     <li><Link to="/home">Home</Link></li>
                     <li><Link to="/home">About Us</Link></li>
                     <li><Link to="/home">News</Link></li>
-                    <li><Link to="/home">Contact Us</Link></li>
+                    <li><Link to="/result">Contact Us</Link></li>
                     {isAdmin ? (
                         <li><Link to="/admin/adminlogin" className="button">Admin Login</Link></li>
                     ) : (

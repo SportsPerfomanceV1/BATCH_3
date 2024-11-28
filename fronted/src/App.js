@@ -17,6 +17,7 @@ import CreateMeet from './component/admin/CreateMeet';
 import CreateEvent from './component/admin/CreateEvent';
 import RegisterCoach from './component/admin/RegisterCoach';
 import Dashboard from './component/dashboard/Dashboard';
+import Publish from './component/admin/publish';
 function App() {
   return (
     <Router>
@@ -40,6 +41,7 @@ function App() {
               <Route path="/login" element={<Login />} /> 
               <Route path="/register" element={<Register />} />
               <Route path="/dashboard" element={<Dashboard/>}/>
+              <Route path="/publish" element={<Publish/>}/>
             </Routes>
           </div>
           

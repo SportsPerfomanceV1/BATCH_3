@@ -11,7 +11,7 @@ const AdminDashboard = () => {
                     <ul className="navbar-links1">
                         <li><Link to="/news">News</Link></li>
                         <li><Link to="/event">Events</Link></li>
-                        <li><Link to="/result">Results</Link></li>
+                        <li><Link to="/publish">Results</Link></li>
                         <li><Link to="/coaches">Coaches</Link></li>
                         <li><Link to="/athelete">Athletes</Link></li>
                         <li><Link to="/dashboard">Profile</Link></li>
