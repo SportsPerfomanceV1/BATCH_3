@@ -1,9 +1,6 @@
 package com.SportsPerformance.Athlete.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -21,5 +18,7 @@ public class Coach {
     private LocalDate birthDate;
     private String gender;
     private String category;
-    private String photoUrl;
+    @Lob
+    @Column(nullable = false,length = 1000)
+    private byte[] photoUrl;
 }

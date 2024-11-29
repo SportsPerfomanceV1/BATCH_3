@@ -10,7 +10,7 @@ public interface EventService {
 
     public Event saveEvent(Event event);
     public Event createEvent(EventRequestDto eventRequestDto);
-   public Event getEventById(String eventId);
+   public Event getEventById(int eventId);
     public List<Event> getAllEvents();
     public EventStatsResponse getEventStats();
 }

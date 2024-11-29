@@ -22,7 +22,9 @@ public class AssistanceRequest {
     @JoinColumn(name = "athleteId", referencedColumnName = "athleteId", nullable = false)
     private Athlete athlete;
 
-    private int coachId;
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "coachId", referencedColumnName = "coachId", nullable = false)
+    private Coach coach;
 
     @Column(nullable = false)
     private String status;

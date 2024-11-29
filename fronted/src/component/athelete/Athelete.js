@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import AthleteRegistrationForm from './athleteRegistration.js';
 import AthleteUpdateForm from './AthleteUpdateForm';
+import defaultProfileImage from './defaultProfileImage.jfif';
 
 const Athlete = () => {
     const [activeTab, setActiveTab] = useState('Overview');
@@ -38,7 +39,7 @@ const Athlete = () => {
             if (error.response) {
               console.error('Error response:', error.response.data);
               setError(error.response.data || 'An error occurred');
-              if(error.response.data == 'Athlete not found'){
+              if(error.response.data === 'Athlete not found'){
                 alert('Please update your details');
                 setShowRegistrationForm(true);
               }
@@ -61,6 +62,12 @@ const Athlete = () => {
         setShowUpdateForm(false);
     };
 
+    const getImageSrc = () => {
+        if (athleteData.photoUrl) {
+            return `data:image/jpeg;base64,${athleteData.photoUrl}`;
+        }
+        return defaultProfileImage;
+    };
 
     return (
         <div>
@@ -87,8 +94,7 @@ const Athlete = () => {
             <div className="athlete-profile">
                 <div className="profile-card">
                 <img 
-                            src={athleteData.photoUrl} 
-                            alt={`${athleteData.firstName} ${athleteData.lastName}`} 
+                            src={getImageSrc()}
                             className="profile-image" 
                         />
                         <div className="profile-info">

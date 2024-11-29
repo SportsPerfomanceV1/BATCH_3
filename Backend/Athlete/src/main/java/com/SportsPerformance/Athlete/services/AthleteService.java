@@ -6,13 +6,14 @@ import com.SportsPerformance.Athlete.entities.AssistanceRequest;
 import com.SportsPerformance.Athlete.entities.Athlete;
 import com.SportsPerformance.Athlete.repositories.AssistanceRequestRepository;
 import com.SportsPerformance.Athlete.repositories.AthleteRepository;
+import com.SportsPerformance.Athlete.repositories.CoachRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.io.File;
+
 import java.io.IOException;
 import java.nio.file.FileSystemException;
 import java.time.LocalDate;
@@ -26,14 +27,16 @@ public class AthleteService {
     private final ObjectMapper mapper;
     private final AssistanceRequestRepository assistanceRequestRepository;
     private final WebClient.Builder builder;
+    private final CoachRepository coachRepository;
 
-    String FOLDER_PATH = "C:/Users/LENOVO/OneDrive/Desktop/BATCH_3/Backend/Img/Athletes/";
+
     String url = "http://USER-SERVICE/auth/getUserIdFromToken?token=";
-    public AthleteService(AthleteRepository athleteRepository, ObjectMapper mapper, AssistanceRequestRepository assistanceRequestRepository, WebClient.Builder builder) {
+    public AthleteService(AthleteRepository athleteRepository, ObjectMapper mapper, AssistanceRequestRepository assistanceRequestRepository, WebClient.Builder builder, CoachRepository coachRepository) {
         this.athleteRepository = athleteRepository;
         this.mapper = mapper;
         this.assistanceRequestRepository = assistanceRequestRepository;
         this.builder = builder;
+        this.coachRepository = coachRepository;
     }
 
     public int getUserId(HttpServletRequest request){
@@ -48,12 +51,6 @@ public class AthleteService {
         if (athleteRepository.existsByUserId(userId)) {
             throw new IllegalArgumentException("user already exists");
         }
-        String filePath;
-        try {
-            filePath = saveFile(file);
-        } catch (Exception e) {
-            throw new FileSystemException("Failed to upload image");
-        }
         AthleteRequestDto athleteRequestDto = mapper.readValue(athleteData, AthleteRequestDto.class);
 
         Athlete athlete = new Athlete();
@@ -65,7 +62,11 @@ public class AthleteService {
         athlete.setHeight(athleteRequestDto.getHeight());
         athlete.setWeight(athleteRequestDto.getWeight());
         athlete.setCategory(athleteRequestDto.getCategory());
-        athlete.setPhotoUrl(filePath);
+        try {
+            athlete.setPhotoUrl(file.getBytes());
+        }catch (Exception e) {
+            throw new FileSystemException("Failed to upload image");
+        }
         return athleteRepository.save(athlete);
     }
 
@@ -117,8 +118,7 @@ public class AthleteService {
 
         if (file != null){
             try {
-                String filePath = saveFile(file);
-                athlete.setPhotoUrl(filePath);
+                athlete.setPhotoUrl(file.getBytes());
             }catch (Exception e){
                 throw new FileSystemException("Failed to upload image");
             }
@@ -126,17 +126,6 @@ public class AthleteService {
 
         return athleteRepository.save(athlete);
     }
-
-    public String saveFile(MultipartFile file) throws IOException {
-        String filePath = FOLDER_PATH+file.getOriginalFilename();
-        file.transferTo(new File(filePath));
-        return filePath;
-    }
-
-    /*
-    public Boolean validateAthlete(String email) {
-        return athleteRepository.existsByFirstName(email);
-    }*/
 
     public AssistanceRequest requestAssistance(HttpServletRequest httpServletRequest,AssistanceRequestDto assistanceRequestDto) {
 
@@ -154,7 +143,8 @@ public class AthleteService {
         else {
             AssistanceRequest request = new AssistanceRequest();
             request.setAthlete(athlete);
-            request.setCoachId(assistanceRequestDto.getCoachId());
+            request.setCoach(coachRepository.findById(assistanceRequestDto.getCoachId())
+                    .orElseThrow(() -> new RuntimeException("Coach not found")));
             request.setStatus("pending");
             return assistanceRequestRepository.save(request);
         }

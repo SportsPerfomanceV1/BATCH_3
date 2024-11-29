@@ -2,6 +2,7 @@ package com.SportsPerformance.Athlete.controllers;
 
 import com.SportsPerformance.Athlete.dtos.AnalysisResponseDto;
 import com.SportsPerformance.Athlete.dtos.CoachRequestDto;
+import com.SportsPerformance.Athlete.entities.AssistanceRequest;
 import com.SportsPerformance.Athlete.entities.Coach;
 import com.SportsPerformance.Athlete.services.CoachService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +20,7 @@ public class CoachController {
     @Autowired
     private CoachService coachService;
 
-    @PostMapping("/create")
+    @PostMapping("/create/coach")
     public ResponseEntity<Coach> createProfile(HttpServletRequest request,
                                                @RequestParam String dto,
                                                @RequestParam("file") MultipartFile photo) throws IOException {
@@ -27,7 +28,7 @@ public class CoachController {
         return ResponseEntity.ok(coach);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/update/coach")
     public ResponseEntity<Coach> updateProfile(HttpServletRequest request,
                                                @RequestParam String dto,
                                                @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
@@ -59,5 +60,28 @@ public class CoachController {
         return ResponseEntity.ok(analysis);
     }
 
+    @GetMapping("/requests")
+    public ResponseEntity<List<AssistanceRequest>> getAssistanceRequests(HttpServletRequest request,
+                                                                         @RequestBody String status) {
+        List<AssistanceRequest> requests = coachService.getAssistanceRequests(request, status);
+        return ResponseEntity.ok(requests);
+    }
 
+    // Approve an assistance request
+    // Approve an assistance request
+    @PostMapping("/approve/{requestId}/coach")
+    public ResponseEntity<String> approveRequest(
+            @PathVariable int requestId) {
+        String response = coachService.approveRequest(requestId);
+        return ResponseEntity.ok(response);
+    }
+
+
+    // Decline an assistance request
+    @PostMapping("/decline/{requestId}/coach")
+    public ResponseEntity<String> declineRequest(
+            @PathVariable int requestId) {
+        String response = coachService.declineRequest(requestId);
+        return ResponseEntity.ok(response);
+    }
 }
