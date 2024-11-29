@@ -36,8 +36,8 @@ public class EventServiceImp implements EventService{
         return saveEvent(event);
     }
     @Override
-    public Event getEventById(String eventId) {
-        Optional<Event> event = eventRepository.findById(Integer.parseInt(eventId));
+    public Event getEventById(int eventId) {
+        Optional<Event> event = eventRepository.findById(eventId);
         return event.orElse(null); // Return the event if found, otherwise null
     }
 
@@ -69,7 +69,6 @@ public class EventServiceImp implements EventService{
 
         return stats;
     }
-
 
 
 }

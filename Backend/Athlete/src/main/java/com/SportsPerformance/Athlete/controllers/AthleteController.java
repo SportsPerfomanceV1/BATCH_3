@@ -98,13 +98,6 @@ public class AthleteController {
         return ResponseEntity.ok(athleteId);
     }
 
-    /*
-    @GetMapping("/validate")
-    public ResponseEntity<Boolean> validateAthlete(@RequestBody String email){
-        Boolean isValid = athleteService.validateAthlete(email);
-        return ResponseEntity.ok(isValid);
-    }*/
-
     @PostMapping("/requestAssistance")
     public ResponseEntity<?> requestAssistance(HttpServletRequest httpServletRequest,
                                                @RequestBody AssistanceRequestDto assistanceRequestDto){

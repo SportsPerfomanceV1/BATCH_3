@@ -32,6 +32,7 @@ public class Athlete {
     @Column(nullable = false)
     private String category;
     private int coachId;
-    @Column(nullable = false)
-    private String photoUrl;
+    @Lob
+    @Column(nullable = false,length = 1000)
+    private byte[] photoUrl;
 }

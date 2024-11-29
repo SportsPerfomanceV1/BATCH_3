@@ -2,7 +2,10 @@ package com.SportsPerformance.Athlete.services;
 
 import com.SportsPerformance.Athlete.dtos.AnalysisResponseDto;
 import com.SportsPerformance.Athlete.dtos.CoachRequestDto;
+import com.SportsPerformance.Athlete.entities.AssistanceRequest;
+import com.SportsPerformance.Athlete.entities.Athlete;
 import com.SportsPerformance.Athlete.entities.Coach;
+import com.SportsPerformance.Athlete.repositories.AssistanceRequestRepository;
 import com.SportsPerformance.Athlete.repositories.CoachRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,20 +27,22 @@ public class CoachService {
     private WebClient.Builder builder;
     @Autowired
     private ObjectMapper mapper;
+    @Autowired
+    private AssistanceRequestRepository assistanceRequestRepository;
 
-    String FOLDER_PATH = "C:/Users/LENOVO/OneDrive/Desktop/BATCH_3/Backend/Img/Coaches/";
     String url = "http://USER-SERVICE/auth/getUserIdFromToken?token=";
+    public int getUserId(HttpServletRequest request){
+        String token = request.getHeader("Authorization").substring(7);
+        return builder.build().get().uri(url + token)
+                .retrieve().bodyToMono(Integer.class).block();
+    }
 
     public Coach createProfile(HttpServletRequest request, String coachData, MultipartFile file) throws IOException {
-        String token = request.getHeader("Authorization").substring(7);
-        int userId = builder.build().get().uri(url + token)
-                .retrieve().bodyToMono(Integer.class).block();
-
+        int userId = getUserId(request);
         if (coachRepository.existsByUserId(userId)){
             throw new RuntimeException("user already exists");
         }
 
-        String filePath = saveFile(file);
         CoachRequestDto dto = mapper.readValue(coachData, CoachRequestDto.class);
 
         Coach coach = new Coach();
@@ -47,15 +52,13 @@ public class CoachService {
         coach.setBirthDate(LocalDate.parse(dto.getBirthDate()));
         coach.setGender(dto.getGender());
         coach.setCategory(dto.getCategory());
-        coach.setPhotoUrl(filePath);
+        coach.setPhotoUrl(file.getBytes());
 
         return coachRepository.save(coach);
     }
 
     public Coach updateProfile(HttpServletRequest request, String coachData, MultipartFile file) throws IOException {
-        String token = request.getHeader("Authorization").substring(7);
-        int userId = builder.build().get().uri(url + token)
-                .retrieve().bodyToMono(Integer.class).block();
+        int userId = getUserId(request);
 
         CoachRequestDto dto = mapper.readValue(coachData, CoachRequestDto.class);
         Coach coach = findByUserId(userId);
@@ -65,8 +68,7 @@ public class CoachService {
         coach.setGender(dto.getGender());
         coach.setCategory(dto.getCategory());
         if (file != null){
-            String filePath = saveFile(file);
-            coach.setPhotoUrl(filePath);
+            coach.setPhotoUrl(file.getBytes());
         }
 
         return coachRepository.save(coach);
@@ -80,6 +82,7 @@ public class CoachService {
     public List<Coach> findAll() {
         return coachRepository.findAll();
     }
+
 
     public List<Coach> searchByName(String name) {
         return coachRepository.findByFirstNameContainingOrLastNameContaining(name, name);
@@ -100,9 +103,39 @@ public class CoachService {
                 .orElseThrow(() -> new RuntimeException("Coach not found for userId: " + userId));
     }
 
-    public String saveFile(MultipartFile file) throws IOException {
-        String filePath = FOLDER_PATH+file.getOriginalFilename();
-        file.transferTo(new File(filePath));
-        return filePath;
+    public int findCoachIdByUserId(int userId){
+        Coach coach = findByUserId(userId);
+        return coach.getCoachId();
+    }
+
+    public List<AssistanceRequest> getAssistanceRequests(HttpServletRequest request,String status) {
+        int userId = getUserId(request);
+        int coachId = findCoachIdByUserId(userId);
+
+        return assistanceRequestRepository.findByCoach_CoachIdAndStatus(coachId,status);
+    }
+
+    public String approveRequest(int requestId) {
+        // Fetch the assistance request
+        AssistanceRequest request = assistanceRequestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Assistance request not found"));
+
+
+        // Set status and remarks
+        request.setStatus("approved");
+
+        // Save the updated AssistanceRequest
+        assistanceRequestRepository.save(request);
+        return "Request approved successfully";
+    }
+
+    public String declineRequest(int requestId) {
+        AssistanceRequest request = assistanceRequestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Assistance request not found"));
+
+        request.setStatus("declined");
+
+        assistanceRequestRepository.save(request);
+        return "Request declined successfully";
     }
 }
