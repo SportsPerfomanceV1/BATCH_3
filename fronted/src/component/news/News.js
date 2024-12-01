@@ -63,12 +63,12 @@ const News = () => {
         <nav>
           <ul className="navbar-links1">
             <li><Link to="/news">News</Link></li>
-            <li><Link to="/events">Events</Link></li>
+            <li><Link to="/event">Event</Link></li>
             <li><Link to="/results">Results</Link></li>
             <li><Link to="/coaches">Coaches</Link></li>
-            <li><Link to="/athletes">Athletes</Link></li>
-            <li><Link to="/profile">Profile</Link></li>
-            <li><Link to="/logout">Logout</Link></li>
+            <li><Link to="/atheletes">Athelete</Link></li>
+            <li><Link to="/dashboard">Profile</Link></li>
+            <li><Link to="/home">Logout</Link></li>
           </ul>
         </nav>
       </header>
