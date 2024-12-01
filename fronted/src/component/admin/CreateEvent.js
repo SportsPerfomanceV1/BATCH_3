@@ -2,15 +2,29 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './EventForm.css';
 
-const CreateEvent = ({ onEventRegistered }) => {
+const CreateEvent = ({ onClose, meets }) => {
   const [eventDetails, setEventDetails] = useState({
     eventName: '',
     eventDate: '',
-    eventTime: '',
-    eventDescription: '',
+    meetName: '',
+    category: '',
+    location: '',
+    image: null
   });
 
+  
+  const [selectedMeet, setSelectedMeet] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const getAuthHeader = () => {
+    const token = localStorage.getItem('authToken');
+    return {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,23 +34,42 @@ const CreateEvent = ({ onEventRegistered }) => {
     });
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setEventDetails({
+      ...eventDetails,
+      image: file
+    });
+  };
+
+  const handleMeetChange = (e) => {
+    const meetName = e.target.value;
+    setSelectedMeet(meetName);
+    setEventDetails({
+      ...eventDetails,
+      meetName: meetName,
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:8080/event/register', eventDetails);
+      const formDataToSend = new FormData();
+      formDataToSend.append('eventData', JSON.stringify(eventDetails));
+      formDataToSend.append('file', eventDetails.image);
+      const authHeader = getAuthHeader();
+
+      const response = await axios.post('http://localhost:8080/event/add/admin', formDataToSend, authHeader);
+
       alert('Event registered successfully!');
-      setEventDetails({
-        eventName: '',
-        eventDate: '',
-        eventTime: '',
-        eventDescription: '',
-      });
-      onEventRegistered(response.data); 
+      console.log('Event registered successfully:', response.data);
+      onClose();
+
     } catch (error) {
       console.error('Error registering event:', error);
-      alert('Successfully Registered Event.');
+      alert(error.response.data || 'Error creating event. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -45,6 +78,7 @@ const CreateEvent = ({ onEventRegistered }) => {
   return (
     <div className="event-form-container">
       <form onSubmit={handleSubmit} className="event-form">
+        <button type="button" className="close-button" onClick={onClose}>×</button>
         <h2>Create an Event</h2>
 
         <div className="form-group">
@@ -60,6 +94,17 @@ const CreateEvent = ({ onEventRegistered }) => {
         </div>
 
         <div className="form-group">
+          <select value={selectedMeet} onChange={handleMeetChange}>
+            <option value="">Select a Meet</option>
+            {meets.map(meet => (
+              <option key={meet.meetId} value={meet.meetName}>
+                {meet.meetName}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="form-group">
           <label htmlFor="eventDate">Event Date</label>
           <input
             type="date"
@@ -72,34 +117,42 @@ const CreateEvent = ({ onEventRegistered }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="eventTime">Event Time</label>
+          <label htmlFor="category">Category</label>
           <input
-            type="time"
-            id="eventTime"
-            name="eventTime"
-            value={eventDetails.eventTime}
+            id="category"
+            name="category"
+            value={eventDetails.category}
             onChange={handleInputChange}
             required
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="eventDescription">Event Description</label>
-          <textarea
-            id="eventDescription"
-            name="eventDescription"
-            value={eventDetails.eventDescription}
+          <label htmlFor="location">Location</label>
+          <input
+            id="location"
+            name="location"
+            value={eventDetails.location}
             onChange={handleInputChange}
             required
           />
         </div>
 
+        <div className="form-group">
+          <label>Image:</label>
+          <input 
+            type="file" 
+            name="imageFile" 
+            accept="image/*" 
+            onChange={handleImageChange}
+          />
+        </div>
+
         <button type="submit" className="submit-btn" disabled={isLoading}>
-          {isLoading ? 'Registering...' : 'Register Event'}
+          {isLoading ? 'Registering...' : 'Create Event'}
         </button>
       </form>
     </div>
-  );
-};
+  );};
 
 export default CreateEvent;

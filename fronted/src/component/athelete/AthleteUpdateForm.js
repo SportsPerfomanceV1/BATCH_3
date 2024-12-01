@@ -7,7 +7,7 @@ const AthleteUpdateForm = ({ athleteData, onClose, onUpdate }) => {
     lastName: '',
     birthDate: '',
     gender: 'Male', // Default value
-    height: '',
+    height: '', //
     weight: '',
     category: '',
     imageFile: null,

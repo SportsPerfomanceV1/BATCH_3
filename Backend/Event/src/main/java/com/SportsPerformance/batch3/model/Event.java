@@ -17,8 +17,10 @@ public class Event {
     @Column(name = "event_title", length = 100)
     private String eventTitle;
 
-    @Column(length = 100)
-    private String meetName;
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "meetId", referencedColumnName = "meetId", nullable = false)
+    private Meet meet;
+
 
     @Column(length = 50)
     private String category;
@@ -29,5 +31,8 @@ public class Event {
     @Column(length = 255)
     private String location;
 
+    @Lob
+    @Column(length = 1000)
+    private byte[] photo;
 
 }

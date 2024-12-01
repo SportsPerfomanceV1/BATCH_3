@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class CoachService {
@@ -74,9 +75,12 @@ public class CoachService {
         return coachRepository.save(coach);
     }
 
-    public Coach findById(int coachId) {
+    public Coach findById(HttpServletRequest request) {
+        int userId = getUserId(request);
+        int coachId = findCoachIdByUserId(userId);
+
         return coachRepository.findById(coachId)
-                .orElseThrow(() -> new RuntimeException("Coach not found"));
+                .orElseThrow(() -> new NoSuchElementException("Coach not found"));
     }
 
     public List<Coach> findAll() {

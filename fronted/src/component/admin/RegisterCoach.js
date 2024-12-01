@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './RegisterCoach.css';
 import axios from 'axios';
 
-const RegisterCoach = () => {
+const RegisterCoach = ({ onClose }) => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -14,7 +14,7 @@ const RegisterCoach = () => {
 
     const togglePasswordVisibility = () => {
         setShowPassword((prevShowPassword) => !prevShowPassword);
-      };
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,8 +35,7 @@ const RegisterCoach = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Here you can handle form submission, e.g., send data to the server
-        try{
+        try {
             setError('');
             setSuccessMessage('');
 
@@ -48,11 +47,8 @@ const RegisterCoach = () => {
             );
             console.log('Registering Coach:', formData);
             setSuccessMessage('Coach registered successfully!');
-            // Reset form
-            setFormData({
-                email: '',
-            password: '',
-            });
+            alert('Coach Registered successful!');
+            onClose();
         } catch (error) {
             if (error.response) {
                 console.error('Error response:', error.response.data);
@@ -65,49 +61,49 @@ const RegisterCoach = () => {
                 setError('Error in setting up the request');
             }
         }
-        
     };
 
     return (
         <div className="register-coach-container">
+            <button className="close-button" onClick={onClose}>×</button>
             <h2>Register Coach</h2>
             {successMessage && <p className="success-message">{successMessage}</p>}
             {error && <div className="error-message">{error}</div>}
             <form onSubmit={handleSubmit} className="register-coach-form">
-            <label htmlFor="email">Email</label>
-            <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            placeholder="Enter your email" 
-            required 
-            className="form-input"
-            value={formData.email}
-            onChange={handleChange} 
-            />
-            
-            <label htmlFor="password">Password</label>
-            <div className="password-container">
-            <input 
-                type={showPassword ? "text" : "password"}
-                id="password" 
-                name="password" 
-                placeholder="Enter your password" 
-                required 
-                className="form-input"
-                value={formData.password}
-                onChange={handleChange} 
-            />
-            <button
-                type="button"
-                onClick={togglePasswordVisibility}
-                className="toggle-password-btn"
-            >
-                {showPassword ? "Hide" : "Show"}
-            </button>
-            </div>
+                <label htmlFor="email">Email</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="Enter your email" 
+                    required 
+                    className="form-input"
+                    value={formData.email}
+                    onChange={handleChange} 
+                />
                 
-            <button type="submit" className="submit-button">Register Coach</button>
+                <label htmlFor="password">Password</label>
+                <div className="password-container">
+                    <input 
+                        type={showPassword ? "text" : "password"}
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter your password" 
+                        required 
+                        className="form-input"
+                        value={formData.password}
+                        onChange={handleChange} 
+                    />
+                    <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        className="toggle-password-btn"
+                    >
+                        {showPassword ? "Hide" : "Show"}
+                    </button>
+                </div>
+                    
+                <button type="submit" className="submit-button">Register Coach</button>
             </form>
         </div>
     );

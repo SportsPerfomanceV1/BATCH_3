@@ -1,8 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react'; // Import useState
 import { Link, Route, Routes } from 'react-router-dom';
 import './AdminDashboard.css';
+import axios from 'axios';
+import CoachRegistrationForm from './RegisterCoach.js';
+import Modal from './CreateMeet.js';
+import CreateEvent from './CreateEvent.js';
 
 const AdminDashboard = () => {
+    const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+    const [createEventForm, setCreateEventForm] = useState(false);
+    const [createdMeets, setCreatedMeets] = useState([]);
+    const [showModal, setShowModal] = useState(false); 
+
+    const getAuthHeader = () => {
+        const token = localStorage.getItem('authToken');
+        return {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+    };
+
+    // Fetch created meets from the backend
+    const fetchCreatedMeets = async () => {
+        try {
+            const authHeader = getAuthHeader();
+            const response = await axios.get('http://localhost:8080/meet/getAll', authHeader);
+            setCreatedMeets(response.data);
+        } catch (error) {
+            console.error('Error fetching created meets:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchCreatedMeets();
+    }, []);
+
+    const handleMeetCreated = (newMeet) => {
+        setCreatedMeets((prevMeets) => [...prevMeets, newMeet]);
+    };
+
     return (
         <div className="admin-dashboard">
             <header className="navbar1">
@@ -21,50 +58,53 @@ const AdminDashboard = () => {
             </header>
 
             <div className="dashboard-content">
-                <h2>Admin Dashboard</h2>
-                
-                <div className="button-group">
-                    <Link to="/createevent">
-                        <button className="action-button">Create Event</button>
-                    </Link>
-                    <Link to="/createmeet">
-                        <button className="action-button">Create Meet</button>
-                    </Link>
-                    <Link to="/registercoach">
-                        <button className="action-button">Register Coach</button>
-                    </Link>
-                    <Link to="/result">
-                        <button className="action-button">Publish Results</button>
-                    </Link>
-                </div>
-                
-                <div className="created-meets">
-                    <h3>Created Meets</h3>
-                    <table className="meets-table">
-                        <thead>
-                            <tr>
-                                <th>MEET ID</th>
-                                <th>MEET NAME</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>M_00001</td>
-                                <td>Victory Sprint Classic</td>
-                            </tr>
-                            <tr>
-                                <td>M_00002</td>
-                                <td>Grand Marathon Challenge</td>
-                            </tr>
-                            <tr>
-                                <td>M_00003</td>
-                                <td>Lightning Bolt Championships</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                {showRegistrationForm ? (
+                    <CoachRegistrationForm onClose={() => setShowRegistrationForm(false)} />
+                ) : createEventForm ? (
+                    <CreateEvent onClose={() => setCreateEventForm(false)} meets={createdMeets}/>
+                ) : (
+                    <>
+                        <h2>Admin Dashboard</h2>
+                        <div className="button-group">
+                            <Link>
+                                <button className="action-button" onClick={() => setCreateEventForm(true)}>Create Event</button>
+                            </Link>
+                            <Link>
+                            <button className="action-button" onClick={() => setShowModal(true)}>Create Meet</button>
+                            </Link>
+                            <Link>
+                            <button className="action-button" onClick={() => setShowRegistrationForm(true)}>Register Coach</button>
+                            </Link>
+                            <Link to="/result">
+                                <button className="action-button">Publish Results</button>
+                            </Link>
+                        </div>
+
+                        <div className="created-meets">
+                            <h3>Created Meets</h3>
+                            <table className="meets-table">
+                                <thead>
+                                    <tr>
+                                        <th>MEET ID</th>
+                                        <th>MEET NAME</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {createdMeets.map(meet => (
+                                        <tr key={meet.meetId}>
+                                            <td>{`M000${meet.meetId}`}</td>
+                                            <td>{meet.meetName}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </>
+                )}
             </div>
-           
+            {showModal && <Modal onClose={() => setShowModal(false)} onMeetCreated={handleMeetCreated} />}
+
+
             <Routes>
                 <Route path="/news" element={<h2>News Page</h2>} />
                 <Route path="/events" element={<h2>Events Page</h2>} />
