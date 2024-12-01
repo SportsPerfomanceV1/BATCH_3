@@ -7,12 +7,14 @@ import com.SportsPerformance.Athlete.entities.Coach;
 import com.SportsPerformance.Athlete.services.CoachService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/coaches")
@@ -36,10 +38,14 @@ public class CoachController {
         return ResponseEntity.ok(coach);
     }
 
-    @GetMapping("/{coachId}")
-    public ResponseEntity<Coach> findById(@PathVariable int coachId) {
-        Coach coach = coachService.findById(coachId);
-        return ResponseEntity.ok(coach);
+    @GetMapping("/getById")
+    public ResponseEntity<?> findById(HttpServletRequest request) {
+        try {
+            Coach coach = coachService.findById(request);
+            return ResponseEntity.ok(coach);
+        }catch (NoSuchElementException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @GetMapping("/all")
