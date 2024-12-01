@@ -47,6 +47,7 @@ const RegisterCoach = ({ onClose }) => {
             );
             console.log('Registering Coach:', formData);
             setSuccessMessage('Coach registered successfully!');
+            alert('Coach Registered successful!');
             onClose();
         } catch (error) {
             if (error.response) {

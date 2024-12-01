@@ -87,11 +87,5 @@
     background: none;
     border: none;
     font-size: 24px;
-    cursor: pointer;
     color: #333;
-    transition: color 0.3s ease;
-}
-
-.close-button:hover {
-    color: #ff0000;
 }

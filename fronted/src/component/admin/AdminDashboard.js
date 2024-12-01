@@ -3,10 +3,14 @@ import { Link, Route, Routes } from 'react-router-dom';
 import './AdminDashboard.css';
 import axios from 'axios';
 import CoachRegistrationForm from './RegisterCoach.js';
+import Modal from './CreateMeet.js';
+import CreateEvent from './CreateEvent.js';
 
 const AdminDashboard = () => {
     const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+    const [createEventForm, setCreateEventForm] = useState(false);
     const [createdMeets, setCreatedMeets] = useState([]);
+    const [showModal, setShowModal] = useState(false); 
 
     const getAuthHeader = () => {
         const token = localStorage.getItem('authToken');
@@ -32,6 +36,10 @@ const AdminDashboard = () => {
         fetchCreatedMeets();
     }, []);
 
+    const handleMeetCreated = (newMeet) => {
+        setCreatedMeets((prevMeets) => [...prevMeets, newMeet]);
+    };
+
     return (
         <div className="admin-dashboard">
             <header className="navbar1">
@@ -52,15 +60,17 @@ const AdminDashboard = () => {
             <div className="dashboard-content">
                 {showRegistrationForm ? (
                     <CoachRegistrationForm onClose={() => setShowRegistrationForm(false)} />
+                ) : createEventForm ? (
+                    <CreateEvent onClose={() => setCreateEventForm(false)} meets={createdMeets}/>
                 ) : (
                     <>
                         <h2>Admin Dashboard</h2>
                         <div className="button-group">
-                            <Link to="/createevent">
-                                <button className="action-button">Create Event</button>
+                            <Link>
+                                <button className="action-button" onClick={() => setCreateEventForm(true)}>Create Event</button>
                             </Link>
-                            <Link to="/createmeet">
-                                <button className="action-button">Create Meet</button>
+                            <Link>
+                            <button className="action-button" onClick={() => setShowModal(true)}>Create Meet</button>
                             </Link>
                             <Link>
                             <button className="action-button" onClick={() => setShowRegistrationForm(true)}>Register Coach</button>
@@ -92,6 +102,8 @@ const AdminDashboard = () => {
                     </>
                 )}
             </div>
+            {showModal && <Modal onClose={() => setShowModal(false)} onMeetCreated={handleMeetCreated} />}
+
 
             <Routes>
                 <Route path="/news" element={<h2>News Page</h2>} />
