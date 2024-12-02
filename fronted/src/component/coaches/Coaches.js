@@ -1,79 +1,110 @@
-import React, { useState } from 'react';
-import ProfileCard from './ProfileCard';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import './Profile.css';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
+import CoachRegistrationForm from './CoachRegistration.js';
+import CoachUpdateForm from './CoachUpdateForm';
+import defaultProfileImage from './defaultProfileImage.jfif';
 
 const Coaches = () => {
-  const [profiles, setProfiles] = useState([
-    {
-      name: 'John Doe',
-      age: 25,
-      bio: 'Professional athlete with 5 years of experience in athletics.',
-      image: 'https://media.istockphoto.com/id/1125038961/photo/young-man-running-outdoors-in-morning.jpg?s=1024x1024&w=is&k=20&c=n93U-5CVLB-0d4jnOcNXqcTo0Msd4O6iPqi0FJKVncU=',
-    },
-    {
-      name: 'Jane Smith',
-      age: 30,
-      bio: 'Experienced coach specializing in track and field.',
-      image: 'https://media.istockphoto.com/id/1176094106/photo/superb-male-athlete-showing-motivation-and-conditioning.jpg?s=1024x1024&w=is&k=20&c=Ra4AO2SlWU2IzRezMA1vrH-JkgBgLcu4wm7ug6IYet8=',
-    },
-    {
-      name: 'John Wohn',
-      age: 25,
-      bio: 'Professional athlete with 5 years of experience in athletics.',
-      image: 'https://images.unsplash.com/photo-1726013878575-7602eb03998b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YXRoZWxldGUlMjBtYW58ZW58MHx8MHx8fDA%3D',
-    },
-    {
-      name: 'Alice',
-      age: 20,
-      bio: 'Professional athlete with 5 years of experience in athletics.',
-      image: 'https://media.istockphoto.com/id/615883260/photo/difficult-doesnt-mean-impossible.webp?a=1&b=1&s=612x612&w=0&k=20&c=Wl9-JMMd5yE7iJs6867lF2XLGaycehFXn2TOckWR8LY=',
-    },
-    {
-      name: 'Peter',
-      age: 40,
-      bio: 'Professional athlete with 5 years of experience in athletics.',
-      image: 'https://media.istockphoto.com/id/500284633/photo/portrait-of-male-athlete-in-gym-gym.webp?a=1&b=1&s=612x612&w=0&k=20&c=epJjxXNSpCaTCHUBvDdQMlHD7pVY18eat7siSsQdP4I=',
-    },
-  ]);
+    const [error, setError] = useState('');
+    const [CoachData, setCoachData] = useState([]);
+    const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+    const [showUpdateForm, setShowUpdateForm] = useState(false);
 
-  const navigate = useNavigate();
+    
 
-  const handleAddProfile = (newProfile) => {
-    setProfiles((prevProfiles) => [...prevProfiles, newProfile]); 
-    navigate('/athlete'); 
-  };
+    const handleRegister = (newCoachData) => {
+        setCoachData(newCoachData);
+    };
 
-  return (
-    <div>
-    <header className="navbar1">
-        <h1 className="logo1">Athletics</h1>
-        <nav>
-            <ul className="navbar-links1">
-                <li><Link to="/news">News</Link></li>
-                <li><Link to="/event">Events</Link></li>
-                <li><Link to="/result">Results</Link></li>
-                <li><Link to="/coaches">Coaches</Link></li>
-                <li><Link to="/athelete">Athletes</Link></li>
-                <li><Link to="/dashboard">Profile</Link></li>
-                <li><Link to="/home">Logout</Link></li>
-            </ul>
-        </nav>
-    </header>
-    <div className="profile-container1">
-      <h1>Manage Athlete/Coach Profiles</h1>
-      <button onClick={() => navigate('/add-profile')} className="add-profile-button">
-        Add Your Profile
-      </button>
-      <div className="profile-cards1">
-        {profiles.map((profile, index) => (
-          <ProfileCard key={index} profile={profile} />
-        ))}
-      </div>
-    </div>
-    </div>
-  );
+    const getAuthHeader = () => {
+        const token = localStorage.getItem('authToken');
+        return {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+    };
+
+    const fetchCoachData = async () => {
+        try {
+            const authHeader = getAuthHeader();
+            const response = await axios.get('http://localhost:8080/coaches/getById', authHeader);
+            setCoachData(response.data);
+        } catch (error) {
+            if (error.response) {
+              console.error('Error response:', error.response.data);
+              setError(error.response.data || 'An error occurred');
+              if(error.response.data === 'Coach not found'){
+                alert('Please update your details');
+                setShowRegistrationForm(true);
+              }
+          } else if (error.request) {
+              console.error('Error request:', error.request);
+              setError('No response received from the server');
+          } else {
+              console.error('Error message:', error.message);
+              setError('Error in setting up the request');
+          }
+          }
+    };
+
+    useEffect(() => {
+        fetchCoachData();
+    }, []);
+
+    const handleUpdate = (updatedCoachData) => {
+        setCoachData(updatedCoachData);
+        setShowUpdateForm(false);
+    };
+
+    const getImageSrc = () => {
+        if (CoachData.photoUrl) {
+            return `data:image/jpeg;base64,${CoachData.photoUrl}`;
+        }
+        return defaultProfileImage;
+    };
+
+    return (
+        <div>
+        <header className="navbar1">
+            <h1 className="logo1">Coach</h1>
+            <nav>
+                <ul className="navbar-links1">
+                    <li><Link to="/coaches">Profile</Link></li>
+                    <li><Link to="/achievements">Achievements</Link></li>
+                    <li><Link to="/requests">Requests</Link></li>
+                    <li><Link to="/">Athletes</Link></li>
+                    <li><Link to="/home">Logout</Link></li>
+                </ul>
+            </nav>
+        </header>
+        <div className="Coach-container">
+        {showRegistrationForm ? (
+                    <CoachRegistrationForm onClose={() => setShowRegistrationForm(false)} onRegister={handleRegister}/>
+                ) : showUpdateForm ? (
+                    <CoachUpdateForm CoachData={CoachData} onClose={() => setShowUpdateForm(false)} onUpdate={handleUpdate} />
+                ) : (
+            <div className="Coach-profile">
+                
+                <img 
+                            src={getImageSrc()}
+                            className="profile-image" 
+                        />
+                        <div className="profile-info">
+                            <h2>{`${CoachData.firstName} ${CoachData.lastName}`}</h2>
+                            <p>Date of Birth: {CoachData.birthDate}</p>
+                            <p>Gender: {CoachData.gender}</p>
+                            <p>Category: {CoachData.category}</p>
+                        </div>
+                    <button className="edit-button" onClick={() => setShowUpdateForm(true)}>✏️ Edit Profile</button>
+                
+            </div>
+                )}
+        </div>
+        </div>
+    );
 };
 
 export default Coaches;

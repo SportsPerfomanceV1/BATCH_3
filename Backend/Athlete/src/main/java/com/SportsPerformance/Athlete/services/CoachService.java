@@ -77,10 +77,8 @@ public class CoachService {
 
     public Coach findById(HttpServletRequest request) {
         int userId = getUserId(request);
-        int coachId = findCoachIdByUserId(userId);
+        return findByUserId(userId);
 
-        return coachRepository.findById(coachId)
-                .orElseThrow(() -> new NoSuchElementException("Coach not found"));
     }
 
     public List<Coach> findAll() {
@@ -104,7 +102,7 @@ public class CoachService {
 
     public Coach findByUserId(int userId) {
         return coachRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Coach not found for userId: " + userId));
+                .orElseThrow(() -> new NoSuchElementException("Coach not found"));
     }
 
     public int findCoachIdByUserId(int userId){

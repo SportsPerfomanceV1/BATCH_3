@@ -29,7 +29,7 @@ public class ResultController {
         }
     }
 
-    @GetMapping("/getAll/coach")
+    @GetMapping("/getAll")
     public ResponseEntity<List<Result>> getAllResult(){
         List<Result> results = resultService.getAllResult();
         return ResponseEntity.ok(results);
