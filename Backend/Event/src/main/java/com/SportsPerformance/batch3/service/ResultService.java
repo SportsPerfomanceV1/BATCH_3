@@ -21,7 +21,7 @@ public class ResultService {
     }
 
     public Result createResult(ResultRequestDto resultRequestDto) {
-        Event event = eventService.getEventById(Integer.parseInt(resultRequestDto.getEventId()));
+        Event event = eventService.getEventById(resultRequestDto.getEventId());
         if (event == null){
             throw new NoSuchElementException("No event found ");
         }

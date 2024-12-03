@@ -75,8 +75,8 @@ const AdminDashboard = () => {
                             <Link>
                             <button className="action-button" onClick={() => setShowRegistrationForm(true)}>Register Coach</button>
                             </Link>
-                            <Link to="/result">
-                                <button className="action-button">Publish Results</button>
+                            <Link>
+                                <button className="action-button">Shortlist</button>
                             </Link>
                         </div>
 

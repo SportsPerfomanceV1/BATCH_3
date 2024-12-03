@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResultRequestDto {
-    private String eventId;
+    private int eventId;
     private int athleteId;
     private float score;
     private String remarks;
