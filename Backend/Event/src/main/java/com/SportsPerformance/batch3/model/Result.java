@@ -19,7 +19,7 @@ public class Result {
     private Event event;
 
     @Column(nullable = false)
-    private int athleteId;
+    private String athleteName;
 
     @Column(nullable = false)
     private float score;

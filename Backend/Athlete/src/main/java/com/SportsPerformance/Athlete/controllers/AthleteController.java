@@ -39,10 +39,10 @@ public class AthleteController {
         }
     }
 
-    @GetMapping("/getByName/coach")
-    public ResponseEntity<Athlete> getAthleteByName(@RequestBody String name) {
-        Athlete athlete = athleteService.getAthleteByName(name);
-        return ResponseEntity.ok(athlete);
+    @GetMapping("/getNameByUserId/{userId}")
+    public ResponseEntity<String> getNameByUserId(@PathVariable int userId) {
+        String name = athleteService.getNameByUserId(userId);
+        return ResponseEntity.ok(name);
     }
 
     @GetMapping("/getById/{athleteId}")

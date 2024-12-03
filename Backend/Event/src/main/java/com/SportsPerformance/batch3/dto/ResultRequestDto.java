@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResultRequestDto {
     private int eventId;
-    private int athleteId;
+    private String athleteName;
     private float score;
     private String remarks;
 }

@@ -24,7 +24,7 @@ public class ResultController {
         try {
             Result result = resultService.createResult(resultRequestDto);
             return ResponseEntity.ok(result);
-        }catch (NoSuchElementException e){
+        }catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

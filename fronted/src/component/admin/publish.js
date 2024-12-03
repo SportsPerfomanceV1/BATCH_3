@@ -19,14 +19,14 @@ const Publish = () => {
 
   const [resultForm, setResultForm] = useState({
     eventId: '',
-    athleteId: '',
+    athleteName: '',
     score: '',
     remarks: '',
   });
 
   const [filters, setFilters] = useState({
     eventId: '',
-    athleteId: '',
+    athleteName: '',
     minScore: '',
     maxScore: ''
   });
@@ -37,6 +37,20 @@ const Publish = () => {
   });
 
   const [activeTab, setActiveTab] = useState('view');
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const authHeader = getAuthHeader();
+        const response = await axios.get('http://localhost:8080/event/getAll', authHeader);
+        setEvents(response.data);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -51,6 +65,26 @@ const Publish = () => {
 
     fetchResults();
   }, []);
+
+  const handleEventChange = async (e) => {
+    const eventId = e.target.value;
+    setResultForm(prev => ({ ...prev, eventId }));
+
+    if (eventId) {
+      try {
+        const authHeader = getAuthHeader();
+        const response = await axios.get(`http://localhost:8080/event/getRegistrationsByEvent/${eventId}/admin`, authHeader);
+        setAthletes(response.data.map(registration => ({
+          id: registration.athleteId,
+          name: registration.athleteName
+        })));
+      } catch (error) {
+        console.error('Error fetching athletes:', error);
+      }
+    } else {
+      setAthletes([]);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -68,29 +102,35 @@ const Publish = () => {
     }));
   };
 
-  const handleAddResult = () => {
-    if (!resultForm.eventId || !resultForm.athleteId || !resultForm.score) {
+  const handleAddResult = async () => {
+    if (!resultForm.eventId || !resultForm.athleteName || !resultForm.score) {
       alert('Please fill in all required fields');
       return;
     }
 
-    const newResult = {
-      ...resultForm,
-      id: `R${Date.now()}`, // Unique ID
-      timestamp: new Date().toISOString()
-    };
+    try {
+      const authHeader = getAuthHeader();
+      const response = await axios.post(
+        'http://localhost:8080/event/result/create/admin',
+        resultForm,
+        authHeader
+      );
 
-    const updatedResults = [...results, newResult];
-    setResults(updatedResults);
+      const newResult = response.data;
+      setResults(prevResults => [...prevResults, newResult]);
 
-    localStorage.setItem('eventResults', JSON.stringify(updatedResults));
+      setResultForm({
+        eventId: '',
+        athleteName: '',
+        score: '',
+        remarks: '',
+      });
 
-    setResultForm({
-      eventId: '',
-      athleteId: '',
-      score: '',
-      remarks: '',
-    });
+      alert('Result uploaded successfully!');
+    } catch (error) {
+      console.error('Error registering event:', error);
+      alert(error.response.data || 'Error creating event. Please try again.');
+    }
   };
 
   const sortResults = (resultsToSort) => {
@@ -108,7 +148,7 @@ const Publish = () => {
   const filterResults = () => {
     return results.filter(result => 
       (!filters.eventId || result.eventId === filters.eventId) &&
-      (!filters.athleteId || result.athleteId === filters.athleteId) &&
+      (!filters.athleteName || result.athleteName === filters.athleteName) &&
       (!filters.minScore || parseFloat(result.score) >= parseFloat(filters.minScore)) &&
       (!filters.maxScore || parseFloat(result.score) <= parseFloat(filters.maxScore))
     );
@@ -120,27 +160,27 @@ const Publish = () => {
       <select 
         name="eventId"
         value={resultForm.eventId}
-        onChange={handleInputChange}
+        onChange={handleEventChange}
         className="input"
       >
         <option value="">Select Event</option>
         {events.map(event => (
-          <option key={event.id} value={event.id}>
-            {event.name} ({event.date})
+          <option key={event.eventId} value={event.eventId}>
+            {event.eventTitle} ({event.eventDate})
           </option>
         ))}
       </select>
 
       <select 
-        name="athleteId"
-        value={resultForm.athleteId}
+        name="athleteName"
+        value={resultForm.athleteName}
         onChange={handleInputChange}
         className="input"
       >
         <option value="">Select Athlete</option>
         {athletes.map(athlete => (
-          <option key={athlete.id} value={athlete.id}>
-            {athlete.name} - {athlete.sport} ({athlete.category})
+          <option key={athlete.id} value={athlete.name}>
+            {athlete.name}
           </option>
         ))}
       </select>
@@ -189,14 +229,14 @@ const Publish = () => {
           </select>
   
           <select 
-            name="athleteId"
-            value={filters.athleteId}
+            name="athleteName"
+            value={filters.athleteName}
             onChange={handleFilterChange}
             className="filter-input"
           >
             <option value="">All Athletes</option>
             {athletes.map(athlete => (
-              <option key={athlete.id} value={athlete.id}>
+              <option key={athlete.id} value={athlete.name}>
                 {athlete.name}
               </option>
             ))}
@@ -243,12 +283,11 @@ const Publish = () => {
           <tbody>
             {filteredAndSortedResults.map(result => {
               const event = events.find(e => e.eventId === result.event.eventId);
-              const athlete = athletes.find(a => a.id === result.athleteId);
               
               return (
                 <tr key={result.resultId} className="table-row">
                   <td>{event ? event.eventTitle : result.event.eventTitle}</td>
-                  <td>{athlete ? athlete.name : result.athleteId}</td>
+                  <td>{result.athleteName}</td>
                   <td>{result.score}</td>
                   <td>{result.remarks || '-'}</td>
                 </tr>
@@ -259,7 +298,6 @@ const Publish = () => {
       </div>
     );
   };
-  
 
   return (
     <div className="container">
