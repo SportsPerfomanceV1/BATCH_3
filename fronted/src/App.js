@@ -17,6 +17,7 @@ import CreateEvent from './component/admin/CreateEvent';
 import RegisterCoach from './component/admin/RegisterCoach';
 import Dashboard from './component/dashboard/Dashboard';
 import Publish from './component/admin/publish';
+import ShortlistAthlete from './component/admin/Shortlist';
 function App() {
   return (
     <Router>
@@ -31,15 +32,16 @@ function App() {
               <Route path="/event" element={<TabNavigation events={eventsData} />} /> {/* Use TabNavigation */}
               <Route path="/coaches" element={<Coaches />} />
               <Route path="/athelete" element={<Athelete />} />
-               <Route path="/admindashboard" element={<AdminDashboard/>}/>
-<Route path="/createmeet" element={<CreateMeet/>}/>
-<Route path="/createevent" element={<CreateEvent/>}/>
-<Route path="/registercoach" element={<RegisterCoach/>}/>
+              <Route path="/admindashboard" element={<AdminDashboard/>}/>
+              <Route path="/createmeet" element={<CreateMeet/>}/>
+              <Route path="/createevent" element={<CreateEvent/>}/>
+              <Route path="/registercoach" element={<RegisterCoach/>}/>
               <Route path="/result" element={<Result />} />
               <Route path="/login" element={<Login />} /> 
               <Route path="/register" element={<Register />} />
               <Route path="/dashboard" element={<Dashboard/>}/>
               <Route path="/publish" element={<Publish/>}/>
+              <Route path="/shortlist" element={<ShortlistAthlete />} />
             </Routes>
           </div>
           

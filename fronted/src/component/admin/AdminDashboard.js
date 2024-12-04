@@ -46,12 +46,11 @@ const AdminDashboard = () => {
                 <h1 className="logo1">Athletics</h1>
                 <nav>
                     <ul className="navbar-links1">
-                        <li><Link to="/news">News</Link></li>
                         <li><Link to="/event">Events</Link></li>
                         <li><Link to="/publish">Results</Link></li>
                         <li><Link to="/coaches">Coaches</Link></li>
                         <li><Link to="/athelete">Athletes</Link></li>
-                        <li><Link to="/dashboard">Profile</Link></li>
+                        <li><Link to="/admindashboard">Profile</Link></li>
                         <li><Link to="/home">Logout</Link></li>
                     </ul>
                 </nav>
@@ -75,8 +74,8 @@ const AdminDashboard = () => {
                             <Link>
                             <button className="action-button" onClick={() => setShowRegistrationForm(true)}>Register Coach</button>
                             </Link>
-                            <Link>
-                                <button className="action-button">Shortlist</button>
+                            <Link to={"/shortlist"}>
+                                <button className="action-button">Shortlist Athlete</button>
                             </Link>
                         </div>
 
@@ -111,7 +110,7 @@ const AdminDashboard = () => {
                 <Route path="/results" element={<h2>Results Page</h2>} />
                 <Route path="/coaches" element={<h2>Coaches Page</h2>} />
                 <Route path="/athletes" element={<h2>Athletes Page</h2>} />
-                <Route path="/profile" element={<h2>Profile Page</h2>} />
+                <Route path="/admindashboard" element={<h2>Profile Page</h2>} />
                 <Route path="/logout" element={<h2>Logging out...</h2>} />
                 <Route path="/create-event" element={<h2>Create Event Page</h2>} />
                 <Route path="/create-meet" element={<h2>Create Meet Page</h2>} />

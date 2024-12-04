@@ -86,4 +86,8 @@ public class RegistrationService {
         }
         return registrations;
     }
+
+    public List<Registration> getRegistrationsByStatus(String status) {
+        return registrationRepository.findAllByStatus(status);
+    }
 }

@@ -50,11 +50,11 @@ public class RegistrationController {
         }
     }
 
-    @GetMapping("/getRegistration/{registrationId}/admin")
-    public ResponseEntity<?> getRegistration(@PathVariable int registrationId){
+    @GetMapping("/getRegistrationsByStatus/admin")
+    public ResponseEntity<?> getRegistrationsByStatus(@RequestParam String status){
         try {
-            Registration registration = registrationService.getRegistration(registrationId);
-            return ResponseEntity.ok(registration);
+            List<Registration> registrations = registrationService.getRegistrationsByStatus(status);
+            return ResponseEntity.ok(registrations);
         }catch (NoSuchElementException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
