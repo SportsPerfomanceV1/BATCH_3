@@ -29,7 +29,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
               <Route path="/news" element={<News />} />
-              <Route path="/event" element={<TabNavigation events={eventsData} />} /> {/* Use TabNavigation */}
+              <Route path="/event" element={<TabNavigation />} /> {/* Use TabNavigation */}
               <Route path="/coaches" element={<Coaches />} />
               <Route path="/athelete" element={<Athelete />} />
               <Route path="/admindashboard" element={<AdminDashboard/>}/>

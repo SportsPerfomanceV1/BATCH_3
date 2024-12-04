@@ -31,13 +31,13 @@ public class RegistrationService {
                 .retrieve().bodyToMono(Integer.class).block();
     }
 
-    public Registration registerEvent(HttpServletRequest request, RegistrationRequestDto registrationRequestDto) {
+    public Registration registerEvent(HttpServletRequest request, int eventId) {
         int userId = getUserId(request);
 
         String athleteName = builder.build().get().uri("http://ATHLETE-SERVICE/athletes/getNameByUserId/"+ userId)
                 .retrieve().bodyToMono(String.class).block();
 
-        int eventId = registrationRequestDto.getEventId();
+
         if (registrationRepository.existsByEvent_EventIdAndAthleteName(eventId, athleteName)){
             throw new IllegalStateException("Registration request exists");
         }

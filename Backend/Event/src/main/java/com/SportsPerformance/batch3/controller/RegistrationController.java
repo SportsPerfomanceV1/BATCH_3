@@ -21,9 +21,9 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerEvent(HttpServletRequest request, @RequestBody RegistrationRequestDto registrationRequestDto){
+    public ResponseEntity<?> registerEvent(HttpServletRequest request, @RequestParam int eventId){
         try {
-            Registration registration = registrationService.registerEvent(request, registrationRequestDto);
+            Registration registration = registrationService.registerEvent(request, eventId);
             return ResponseEntity.ok(registration);
         }catch (IllegalStateException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

@@ -1,21 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import EventList from './EventList';
 import AppliedEvents from './AppliedEvents';
+import axios from 'axios';
 
-const TabNavigation = ({ events }) => {
-  const [eventData, setEventData] = useState(events); // Use local state for events
+const TabNavigation = () => {
+  const [availableEvents, setAvailableEvents] = useState([]);
+  const [appliedEvents, setAppliedEvents] = useState([]);
   const [activeTab, setActiveTab] = useState('available');
 
-  const handleRegister = (eventId) => {
-    setEventData((prevEvents) =>
-      prevEvents.map((event) =>
-        event.id === eventId ? { ...event, isRegistered: true } : event
-      )
-    );
+  const getAuthHeader = () => {
+    const token = localStorage.getItem('authToken');
+    return {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
   };
 
-  const availableEvents = eventData.filter((event) => !event.isRegistered);
-  const appliedEvents = eventData.filter((event) => event.isRegistered);
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const authHeader = getAuthHeader();
+        const response = await axios.get('http://localhost:8080/event/getAll', authHeader);
+        setAvailableEvents(response.data);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    const fetchAppliedEvents = async () => {
+      try {
+        const authHeader = getAuthHeader();
+        const response = await axios.get('http://localhost:8080/event/getRegistrationsByAthlete', authHeader);
+        setAppliedEvents(response.data);
+      } catch (error) {
+        console.error('Error fetching applied events:', error);
+      }
+    };
+
+    fetchEvents();
+    fetchAppliedEvents();
+  }, []);
 
   return (
     <div className="tab-navigation">
@@ -36,7 +61,7 @@ const TabNavigation = ({ events }) => {
       </div>
 
       {activeTab === 'available' ? (
-        <EventList events={availableEvents} onRegister={handleRegister} /> // Pass handleRegister as onRegister
+        <EventList events={availableEvents} />
       ) : (
         <AppliedEvents appliedEvents={appliedEvents} />
       )}
