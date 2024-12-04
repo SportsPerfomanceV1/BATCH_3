@@ -56,7 +56,7 @@ const Publish = () => {
     const fetchResults = async () => {
       try {
         const authHeader = getAuthHeader();
-        const response = await axios.get('http://localhost:8080/event/result/getAll', authHeader);
+        const response = await axios.get('http://localhost:8080/event/result/getAll/coach', authHeader);
         setResults(response.data);
       } catch (error) {
         console.error('Error fetching results:', error);

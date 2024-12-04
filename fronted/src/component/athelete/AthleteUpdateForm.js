@@ -63,7 +63,7 @@ const AthleteUpdateForm = ({ athleteData, onClose, onUpdate }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="coach-form">
       <label>First Name:</label>
       <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required />
 
