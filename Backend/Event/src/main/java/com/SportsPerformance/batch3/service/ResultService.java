@@ -21,17 +21,22 @@ public class ResultService {
     }
 
     public Result createResult(ResultRequestDto resultRequestDto) {
-        Event event = eventService.getEventById(Integer.parseInt(resultRequestDto.getEventId()));
-        if (event == null){
-            throw new NoSuchElementException("No event found ");
-        }
 
-        Result result = new Result();
-        result.setEvent(event);
-        result.setAthleteId(resultRequestDto.getAthleteId());
-        result.setScore(resultRequestDto.getScore());
-        result.setRemarks(resultRequestDto.getRemarks());
-        return resultRepository.save(result);
+        if (resultRepository.existsByEvent_EventIdAndAthleteName(resultRequestDto.getEventId(),resultRequestDto.getAthleteName())){
+            Result result = resultRepository.findByEvent_EventIdAndAthleteName(resultRequestDto.getEventId(),resultRequestDto.getAthleteName());
+            result.setScore(resultRequestDto.getScore());
+            result.setRemarks(resultRequestDto.getRemarks());
+            return resultRepository.save(result);
+        }
+        else {
+            Result result = new Result();
+            Event event = eventService.getEventById(resultRequestDto.getEventId());
+            result.setEvent(event);
+            result.setAthleteName(resultRequestDto.getAthleteName());
+            result.setScore(resultRequestDto.getScore());
+            result.setRemarks(resultRequestDto.getRemarks());
+            return resultRepository.save(result);
+        }
     }
 
     public List<Result> getAllResult() {

@@ -14,4 +14,10 @@ public interface AthleteRepository extends JpaRepository<Athlete, Integer> {
     Athlete findByFullName(@Param("firstName") String firstName, @Param("lastName") String lastName);
 
     boolean existsByUserId(int userId);
+
+    @Query("SELECT a.firstName FROM Athlete a WHERE a.userId = :userId")
+    String findFirstNameByUserId(@Param("userId") int userId);
+
+    @Query("SELECT a.lastName FROM Athlete a WHERE a.userId = :userId")
+    String findLastNameByUserId(@Param("userId") int userId);
 }

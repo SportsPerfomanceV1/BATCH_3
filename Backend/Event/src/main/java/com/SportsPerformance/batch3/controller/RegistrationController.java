@@ -21,9 +21,9 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerEvent(HttpServletRequest request, @RequestBody RegistrationRequestDto registrationRequestDto){
+    public ResponseEntity<?> registerEvent(HttpServletRequest request, @RequestParam int eventId){
         try {
-            Registration registration = registrationService.registerEvent(request, registrationRequestDto);
+            Registration registration = registrationService.registerEvent(request, eventId);
             return ResponseEntity.ok(registration);
         }catch (IllegalStateException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -50,11 +50,11 @@ public class RegistrationController {
         }
     }
 
-    @GetMapping("/getRegistration/{registrationId}/admin")
-    public ResponseEntity<?> getRegistration(@PathVariable int registrationId){
+    @GetMapping("/getRegistrationsByStatus/admin")
+    public ResponseEntity<?> getRegistrationsByStatus(@RequestParam String status){
         try {
-            Registration registration = registrationService.getRegistration(registrationId);
-            return ResponseEntity.ok(registration);
+            List<Registration> registrations = registrationService.getRegistrationsByStatus(status);
+            return ResponseEntity.ok(registrations);
         }catch (NoSuchElementException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

@@ -70,14 +70,11 @@ public class AthleteService {
         return athleteRepository.save(athlete);
     }
 
-    public Athlete getAthleteByName(String name) {
-        String[] names = name.split(" ", 2);
-        if (names.length != 2){
-            throw new IllegalArgumentException("Full name must consist of first name and last name");
-        }
-        String firstName = names[0];
-        String lastName = names[1];
-        return athleteRepository.findByFullName(firstName, lastName);
+    public String getNameByUserId(int userId) {
+
+        String firstName = athleteRepository.findFirstNameByUserId(userId);
+        String lastName = athleteRepository.findLastNameByUserId(userId);
+        return firstName + " " + lastName;
     }
 
     public Athlete getAthleteById(int athleteId) {

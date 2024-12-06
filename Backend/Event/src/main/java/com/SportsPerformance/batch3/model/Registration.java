@@ -22,7 +22,7 @@ public class Registration {
     private Event event;
 
     @Column(nullable = false)
-    private int athleteId;
+    private String athleteName;
 
     @CreationTimestamp
     private LocalDate registrationDate;

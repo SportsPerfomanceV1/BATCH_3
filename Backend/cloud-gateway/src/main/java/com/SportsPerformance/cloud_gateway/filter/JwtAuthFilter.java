@@ -25,7 +25,7 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
         return ((exchange, chain) -> {
             if (validator.isSecured.test(exchange.getRequest())){
                 if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
-                    throw new RuntimeException("missing authorization header");
+                    throw new CustomExceptions.UnauthorizedAccessException("missing authorization header");
                 }
 
                 String authHeader =exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);

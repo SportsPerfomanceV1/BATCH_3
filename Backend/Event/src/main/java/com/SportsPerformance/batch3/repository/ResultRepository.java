@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ResultRepository extends JpaRepository<Result, Integer> {
+    boolean existsByEvent_EventIdAndAthleteName(int eventId, String athleteName);
+
+    Result findByEvent_EventIdAndAthleteName(int eventId, String athleteName);
 }

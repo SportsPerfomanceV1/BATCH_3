@@ -31,19 +31,19 @@ public class RegistrationService {
                 .retrieve().bodyToMono(Integer.class).block();
     }
 
-    public Registration registerEvent(HttpServletRequest request, RegistrationRequestDto registrationRequestDto) {
+    public Registration registerEvent(HttpServletRequest request, int eventId) {
         int userId = getUserId(request);
 
-        int athleteId = builder.build().get().uri("http://ATHLETE-SERVICE/athletes/getIdByUserId/"+ userId + "/coach")
-                .retrieve().bodyToMono(Integer.class).block();
+        String athleteName = builder.build().get().uri("http://ATHLETE-SERVICE/athletes/getNameByUserId/"+ userId)
+                .retrieve().bodyToMono(String.class).block();
 
-        int eventId = registrationRequestDto.getEventId();
-        if (registrationRepository.existsByEvent_EventIdAndAthleteId(eventId, athleteId)){
+
+        if (registrationRepository.existsByEvent_EventIdAndAthleteName(eventId, athleteName)){
             throw new IllegalStateException("Registration request exists");
         }
         else {
             Registration registration = new Registration();
-            registration.setAthleteId(athleteId);
+            registration.setAthleteName(athleteName);
             registration.setEvent(eventRepository.findById(eventId).orElse(null));
             registration.setStatus("pending");
 
@@ -78,12 +78,16 @@ public class RegistrationService {
 
     public List<Registration> getRegistrationsByAthlete(HttpServletRequest request) {
         int userId = getUserId(request);
-        int athleteId = builder.build().get().uri("http://ATHLETE-SERVICE/athletes/getIdByUserId/"+ userId + "/coach")
-                .retrieve().bodyToMono(Integer.class).block();
-        List<Registration> registrations = registrationRepository.findAllByAthleteId(athleteId);
+        String athleteName = builder.build().get().uri("http://ATHLETE-SERVICE/athletes/getNameByUserId/"+ userId)
+                .retrieve().bodyToMono(String.class).block();
+        List<Registration> registrations = registrationRepository.findAllByAthleteName(athleteName);
         if (registrations.isEmpty()){
             throw new NoSuchElementException("No registrations found");
         }
         return registrations;
+    }
+
+    public List<Registration> getRegistrationsByStatus(String status) {
+        return registrationRepository.findAllByStatus(status);
     }
 }

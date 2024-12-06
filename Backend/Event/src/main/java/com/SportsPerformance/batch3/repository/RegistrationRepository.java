@@ -10,7 +10,9 @@ import java.util.List;
 public interface RegistrationRepository extends JpaRepository<Registration, Integer> {
     List<Registration> findAllByEvent_EventId(int eventId);
 
-    boolean existsByEvent_EventIdAndAthleteId(int eventId, int athleteId);
+    boolean existsByEvent_EventIdAndAthleteName(int eventId, String athleteName);
 
-    List<Registration> findAllByAthleteId(int athleteId);
+    List<Registration> findAllByAthleteName(String athleteName);
+
+    List<Registration> findAllByStatus(String status);
 }
